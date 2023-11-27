@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { db } from '../firebase'
 import { collection, getDocs, query, where, DocumentData } from 'firebase/firestore'
 import { CategoriesList } from '../components/Categories'
+import { ProductsList } from '../components/Products'
 
 export const Home = () => {
   const [productCategories, setProductCategories] = useState<DocumentData>([])
@@ -33,7 +34,11 @@ export const Home = () => {
       const prods = snapshotProducts.docs.map(doc => doc.data())
       return setProducts(prods)
     }
+
     // Todo: add all products rendering
+    const snapshotAllProducts = await getDocs(productsRef)
+    const mappedProducts = snapshotAllProducts.docs.map(doc => doc.data())
+    return setProducts(mappedProducts)
   }
 
   useEffect(() => {
@@ -48,6 +53,7 @@ export const Home = () => {
     <>
       <div className='px-5 container mx-auto'>
         <CategoriesList list={productCategories} chooseCategory={chooseCategory} active={currentCategory} />
+        <ProductsList products={products} />
       </div>
     </>
   )
