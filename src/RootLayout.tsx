@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react'
+import { Outlet } from 'react-router-dom'
 
 export const RootLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -9,7 +10,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
         </button>
       </div>
       <main className='flex flex-col'>
-        {children}
+        {<Outlet /> || children}
       </main>
     </>
   )
