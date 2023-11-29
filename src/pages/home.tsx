@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { db } from '../firebase'
-import { collection, getDocs, query, where, DocumentData } from 'firebase/firestore'
+import { getDocs, query, where, DocumentData } from 'firebase/firestore'
 import { CategoriesList } from '../components/Categories'
 import { ProductsList } from '../components/Products'
+import { categoriesRef, productsRef } from '../utils/collectionRefferences'
 
 export const Home = () => {
   const [productCategories, setProductCategories] = useState<DocumentData>([])
@@ -15,10 +15,7 @@ export const Home = () => {
 
   const getCategories = async () => {
     try {
-      const colRef = collection(db, 'categories')
-      // const snap = await getDocs(colRef)
-      // const categories = snap.docs.map((doc) => (doc.id))
-      const snap = await getDocs(colRef)
+      const snap = await getDocs(categoriesRef)
       const categories = snap.docs.map(doc => doc.data())
       console.log('categories', categories)
       setProductCategories(categories)
@@ -27,7 +24,6 @@ export const Home = () => {
     }
   }
   const getProducts = async (currentCategory: string) => {
-    const productsRef = collection(db, 'products')
     if (currentCategory?.length > 0) {
       const q = query(productsRef, where("category", "==", currentCategory))
       const snapshotProducts = await getDocs(q)

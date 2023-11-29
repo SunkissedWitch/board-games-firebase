@@ -1,24 +1,37 @@
 import { useEffect, useState } from 'react'
-import { db } from '../firebase'
-import { collection, getDocs, query, where, DocumentData } from 'firebase/firestore'
+import { getDocs, query, where, DocumentData, documentId, doc } from 'firebase/firestore'
+import { ordersRef, productsRef, usersRef } from '../utils/collectionRefferences'
 
 export const Orders = () => {
   const [orders, setOrders] = useState<DocumentData>([])
-  // const userId = 'D9SAkw4qIP7QZKas45dq'
+
+  const userId = 'D9SAkw4qIP7QZKas45dq'
+  const currentUser = doc(usersRef, userId)
   const getOrders = async () => {
     try {
-      const colRef = collection(db, 'orders')
-      // const snap = await getDocs(colRef)
-      // const categories = snap.docs.map((doc) => (doc.id))
-      const snap = await getDocs(colRef)
-      const ordersDocData = snap.docs.map(doc => doc.data())
-      console.log('ordersDoc', ordersDocData)
-      // ToDo: look for the _DocumentReference
-      setOrders(ordersDocData)
+      const q = query(ordersRef, where('user', '==', currentUser))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach(async (orderDoc) => {
+        if (orderDoc.data().order) {
+          const productsRefDocsArray = orderDoc.data().order
+          const productsQuery = query(
+            productsRef,
+            where(documentId(), 'in', productsRefDocsArray)
+          )
+
+          const productsDocsSnap = await getDocs(productsQuery)
+          let newOrders: DocumentData[] = []
+          productsDocsSnap.forEach((doc) =>
+            newOrders.push({ id: doc.id, ...doc.data() })
+          )
+          setOrders(newOrders)
+        }
+      })
     } catch (error) {
       console.log('error', error)
     }
   }
+  console.log('orders', orders)
 
   useEffect(() => {
     getOrders()
@@ -27,11 +40,16 @@ export const Orders = () => {
   return (
     <>
       <div className='px-5 container mx-auto'>
-        {orders.map((order: DocumentData) => (
-          <div>{order?.id}</div>
-        ))}
+        Order:
+        <ul className='p-2 border'>
+          {orders?.map((order: DocumentData) => (
+            <li key={order?.id}>
+              {order?.category} / {order?.title} / {order?.description?.price}{' '}
+              uah
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   )
 }
-

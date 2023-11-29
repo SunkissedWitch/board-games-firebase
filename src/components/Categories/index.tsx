@@ -8,7 +8,7 @@ import { DocumentData } from 'firebase/firestore'
 
 interface IPropsList {
   list: DocumentData,
-  active: string | undefined,
+  active: string,
   chooseCategory: (prop: string) => void
 }
 
