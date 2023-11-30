@@ -23,7 +23,7 @@ interface IProducts { product: DocumentData, category: string }
 
 export const ProductPage = () => {
   const { product, category } = useLoaderData() as IProducts
-  console.log('product', product)
+  console.log('product', product, category)
   return (
     <div className='px-5 container mx-auto'>
       {/* category {category}, product {product?.title} */}
