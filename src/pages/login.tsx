@@ -1,6 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { AuthErrorCodes, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase'
+import { FirebaseError } from 'firebase/app'
+import { Link } from 'react-router-dom'
 
 type Inputs = {
   email: string
@@ -12,6 +14,7 @@ export const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError
   } = useForm<Inputs>()
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
@@ -19,13 +22,17 @@ export const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       console.log('userCredential', userCredential?.user)
     } catch (error) {
-      // ToDo: update firebase to use this handler:
-      // const iNeedThisErrorSomewhere = AuthErrorCodes.INVALID_LOGIN_CREDENTIALS
-      console.log(error)
+      if (error instanceof FirebaseError) {
+        const errorCode = error.code
+        const errorMessage = error.message
+        if (errorCode === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
+          return setError('root', { message: 'Error: there is no user with such credentials.' })
+        }
+        setError('root', { message: errorMessage })
+      }
+      setError('root', { message: 'Unexpected error'})
     }
   }
-
-  console.log('errors', errors)
 
   return (
     <>
@@ -41,7 +48,7 @@ export const Login = () => {
                 {...register('email', { required: { value: true, message: 'Email is required' } })}
                 type='text'
                 autoComplete='email'
-                placeholder='Type here'
+                placeholder='Type here your email'
                 className='input input-bordered w-full'
               />
               <div className='label'>
@@ -55,17 +62,23 @@ export const Login = () => {
               <input
                 {...register('password', { required: { value: true, message: 'Password is required' } })}
                 type='password'
-                placeholder='Type here'
+                placeholder='Type here your password'
                 className='input input-bordered w-full'
               />
               <div className='label'>
                 {errors?.password && <span className='label-text-alt text-error'>{errors?.password?.message}</span>}
               </div>
             </label>
+            {errors?.root?.message && <div className='alert alert-error'>{errors?.root?.message}</div>}
             <button className='btn btn-primary mt-2.5' type='submit'>
               Confirm
             </button>
           </form>
+          <div className='card-body mb-5'>
+            <div className='text-center'>
+              Have no account? Create it <Link to='/signup' className='link link-primary'>here</Link>
+            </div>
+          </div>
         </div>
       </div>
     </>
