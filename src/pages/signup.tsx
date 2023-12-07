@@ -1,9 +1,9 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { AuthErrorCodes, createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase'
+import { AuthErrorCodes } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 type Inputs = {
   email: string
@@ -21,6 +21,7 @@ export const Signup = () => {
   } = useForm<Inputs>()
   const password = useRef({});
   password.current = watch("password", "")
+  const { signup } = useAuth()
 
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false)
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(false)
@@ -30,7 +31,7 @@ export const Signup = () => {
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     console.log("onSubmit values:", email, password)
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const userCredential = await signup({ email, password })
       console.log('userCredential', userCredential?.user)
     } catch (error) {
       if (error instanceof FirebaseError) {
