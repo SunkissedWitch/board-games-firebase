@@ -1,6 +1,6 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
 import { auth } from '../firebase'
-import { User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { User, UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 interface AuthProps {
   email: string, password: string
@@ -10,6 +10,7 @@ interface AuthContextProps {
   currentUser: User | null
   signup: (props: AuthProps) => Promise<UserCredential>
   login: (props: AuthProps) => Promise<UserCredential>
+  logout: () => Promise<void>
 }
 
 function signup ({ email, password }: AuthProps) {
@@ -20,10 +21,15 @@ function login ({ email, password }: AuthProps) {
   return signInWithEmailAndPassword(auth, email, password)
 }
 
+function logout () {
+  return signOut(auth)
+}
+
 const authCtxDefaultValue = {
   currentUser: null,
   signup,
-  login
+  login,
+  logout
 }
 
 const AuthContext = createContext<AuthContextProps>(authCtxDefaultValue)
