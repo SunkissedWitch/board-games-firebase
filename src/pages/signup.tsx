@@ -1,9 +1,11 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthErrorCodes } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
-import { useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { PasswordInput } from '../components/PasswordInput'
+import { TextInput } from '../components/TextInput'
 
 type Inputs = {
   email: string
@@ -16,38 +18,44 @@ export const Signup = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    clearErrors,
+    formState: { errors, isValidating },
     setError
-  } = useForm<Inputs>()
-  const password = useRef({});
-  password.current = watch("password", "")
+  } = useForm<Inputs>({
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur'
+  })
+  const password = useRef({})
+  password.current = watch('password', '')
   const { signup } = useAuth()
 
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false)
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(false)
-  const togglePasswordVisiblity = () => setPasswordVisible(prevState => !prevState)
-  const toggleConfirmPasswordVisiblity = () => setConfirmPasswordVisible(prevState => !prevState)
-
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
-    console.log("onSubmit values:", email, password)
     try {
-      const userCredential = await signup({ email, password })
-      console.log('userCredential', userCredential?.user)
+      await signup({ email, password })
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code
         const errorMessage = error.message
-        console.log('errorCode', errorCode)
-        if (errorCode === AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE) {
-          console.log('CREDENTIAL_ALREADY_IN_USE', errorMessage)
-          // return setError('root', { message: 'Error: there is no user with such credentials.' })
+        console.log('error', errorCode, errorMessage)
+
+        if (errorCode === AuthErrorCodes.EMAIL_EXISTS) {
+          return setError('root', { message: 'Error: email already in use.' })
         }
-        setError('root', { message: errorMessage })
+
+        return setError('root', { message: errorMessage })
       }
       setError('root', { message: 'Unexpected error'})
     }
   }
-  console.log('errors', errors)
+
+  useEffect(() => {
+    clearErrors('root')
+  }, [isValidating])
 
   return (
     <>
@@ -59,12 +67,10 @@ export const Signup = () => {
               <div className='label'>
                 <span className='label-text'>Email</span>
               </div>
-              <input
+              <TextInput
                 {...register('email', { required: { value: true, message: 'Email is required' } })}
-                type='text'
                 autoComplete='email'
                 placeholder='Type here your email'
-                className='input input-bordered w-full'
               />
               <div className='label'>
                 {errors?.email && <span className='label-text-alt text-error'>{errors?.email?.message}</span>}
@@ -74,15 +80,10 @@ export const Signup = () => {
               <div className='label'>
                 <span className='label-text'>Password</span>
               </div>
-              <div className='join'>
-              <input
+              <PasswordInput
                 {...register('password', { required: 'Password is required' })}
-                type={passwordVisible ? 'text' : 'password'}
                 placeholder='Type here new password'
-                className='input input-bordered w-full'
                 />
-                <button className='btn btn-primary' onClick={togglePasswordVisiblity}>show</button>
-              </div>
               <div className='label'>
                 {errors?.password && <span className='label-text-alt text-error'>{errors?.password?.message}</span>}
               </div>
@@ -91,16 +92,11 @@ export const Signup = () => {
               <div className='label'>
                 <span className='label-text'>Confirm your password</span>
               </div>
-              <div className='join'>
-              <input
+              <PasswordInput
                 {...register('confirmPassword', { required: 'Confirm your password', validate: value =>
                 value === password.current || "The passwords do not match" })}
-                type={confirmPasswordVisible ? 'text' : 'password'}
                 placeholder='Repeat your password'
-                className='input input-bordered w-full'
               />
-              <button className='btn btn-primary' onClick={toggleConfirmPasswordVisiblity}>show</button>
-              </div>
               <div className='label'>
                 {errors?.confirmPassword && <span className='label-text-alt text-error'>{errors?.confirmPassword?.message}</span>}
               </div>

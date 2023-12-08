@@ -3,6 +3,9 @@ import { AuthErrorCodes } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { PasswordInput } from '../components/PasswordInput'
+import { TextInput } from '../components/TextInput'
+import { useEffect } from 'react'
 
 type Inputs = {
   email: string
@@ -13,16 +16,23 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValidating },
+    clearErrors,
     setError
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    defaultValues: {
+      email: '',
+      password: ''
+    },
+    mode: 'onSubmit',
+    reValidateMode: 'onChange'
+  })
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
-      const userCredential = await login({ email, password })
-      console.log('userCredential', userCredential?.user)
+      await login({ email, password })
       navigate('/')
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -31,11 +41,14 @@ export const Login = () => {
         if (errorCode === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
           return setError('root', { message: 'Error: there is no user with such credentials.' })
         }
-        setError('root', { message: errorMessage })
+        return setError('root', { message: errorMessage })
       }
       setError('root', { message: 'Unexpected error'})
     }
   }
+  useEffect(() => {
+    clearErrors('root')
+  }, [isValidating])
 
   return (
     <>
@@ -47,12 +60,10 @@ export const Login = () => {
               <div className='label'>
                 <span className='label-text'>Email</span>
               </div>
-              <input
+              <TextInput
                 {...register('email', { required: { value: true, message: 'Email is required' } })}
-                type='text'
                 autoComplete='email'
                 placeholder='Type here your email'
-                className='input input-bordered w-full'
               />
               <div className='label'>
                 {errors?.email && <span className='label-text-alt text-error'>{errors?.email?.message}</span>}
@@ -62,11 +73,9 @@ export const Login = () => {
               <div className='label'>
                 <span className='label-text'>Password</span>
               </div>
-              <input
+              <PasswordInput
                 {...register('password', { required: { value: true, message: 'Password is required' } })}
-                type='password'
                 placeholder='Type here your password'
-                className='input input-bordered w-full'
               />
               <div className='label'>
                 {errors?.password && <span className='label-text-alt text-error'>{errors?.password?.message}</span>}
