@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { PasswordInput } from '../components/PasswordInput'
 import { TextInput } from '../components/TextInput'
+import { emailRule } from '../utils/formRules'
 
 type Inputs = {
   email: string
@@ -68,8 +69,9 @@ export const Signup = () => {
                 <span className='label-text'>Email</span>
               </div>
               <TextInput
-                {...register('email', { required: { value: true, message: 'Email is required' } })}
+                {...register('email', emailRule)}
                 autoComplete='email'
+                type='email'
                 placeholder='Type here your email'
               />
               <div className='label'>
