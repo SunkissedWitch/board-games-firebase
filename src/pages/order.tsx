@@ -6,6 +6,7 @@ export const Orders = () => {
   const [orders, setOrders] = useState<DocumentData>([])
 
   const userId = 'D9SAkw4qIP7QZKas45dq'
+  // Todo: use firebase/auth to get currentUser, find method to create order with userCredentials
   const currentUser = doc(usersRef, userId)
   const getOrders = async () => {
     try {

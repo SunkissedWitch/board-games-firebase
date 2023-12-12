@@ -2,27 +2,34 @@ import { useLoaderData } from "react-router-dom"
 import { db } from "../firebase"
 import { DocumentData, doc, getDoc } from "firebase/firestore"
 import { formattedPrice } from "../utils/helpers"
+import { useCart } from "../contexts/CartContext"
 
 export const getCurrentProduct = async ({ params }: any) => {
   const { productId, category } = params
   const docRef = doc(db, "products", productId);
   const docSnap = await getDoc(docRef);
+  console.log('docRef', docRef.id)
 
   if (docSnap.exists()) {
     console.log("Document data:", docSnap.data());
-    return { product: docSnap.data(), category: category }
+    return { product: docSnap.data(), category: category, docId: docRef.id }
   } else {
     // docSnap.data() will be undefined in this case
     console.log("No such document!");
-    return { product: {} , category: category || '' }
+    return { product: {} , category: category || '', docId: '' }
   }
 
 }
 
-interface IProducts { product: DocumentData, category: string }
+interface IProducts { product: DocumentData, category: string, docId: string }
 
 export const ProductPage = () => {
-  const { product, category } = useLoaderData() as IProducts
+  const { product, category, docId } = useLoaderData() as IProducts
+  const { addToCart } = useCart()
+  const addToCartHelper = () => {
+    console.log(docId)
+    addToCart(docId)
+  }
   console.log('product', product, category)
   return (
     <div className='px-5 container mx-auto'>
@@ -37,7 +44,7 @@ export const ProductPage = () => {
           <div className='text-3xl font-semibold'>{formattedPrice(product?.description?.price.toString())} грн</div>
           <div>Raiting 5 stars</div>
           <div className="grid grid-cols-2 gap-5 max-w-xs mt-auto">
-            <button className='btn btn-outline'>
+            <button className='btn btn-outline' onClick={addToCartHelper}>
               Add to cart
             </button>
             <button className='btn btn-primary'>
