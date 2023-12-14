@@ -10,6 +10,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
   const goToLoginPage = () => navigate('/login')
   const goToSignUpPage = () => navigate('/signup')
   const goToHomePage = () => navigate('/')
+  const goToCart = () => navigate('/cart')
   const { currentUser, logout } = useAuth()
   const { products } = useCart()
   const { pathname } = useLocation()
@@ -46,7 +47,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
           )}
           <div className="indicator">
             <span className="indicator-item badge badge-primary rounded-full">{products?.length}</span> 
-            <button className="btn btn-square rounded-xl btn-outline">
+            <button className="btn btn-square rounded-xl btn-outline" onClick={goToCart}>
               <ShoppingCartIcon className='w-7 h-7' />
             </button> 
           </div>
