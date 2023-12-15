@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { getDocs, query, where, DocumentData, documentId } from 'firebase/firestore'
 import { productsRef } from '../utils/collectionRefferences'
 import { useCart } from '../contexts/CartContext'
+import { CartView } from '../components/CartView'
 
 export const Cart = () => {
-  const [products, setProducts] = useState<DocumentData>([])
+  const [products, setProducts] = useState<DocumentData[]>([])
   console.log('products', products)
   const { products: cartProductsList } = useCart()
 
@@ -24,13 +25,7 @@ export const Cart = () => {
   }, [cartProductsList])
 
   return (
-    <>
-      <div className='px-5 container mx-auto'>
-        {products.map((product: DocumentData) => {
-          return <div key={product.productId}>{product.title}</div>
-        })}
-      </div>
-    </>
+    <CartView products={products} />
   )
 }
 
