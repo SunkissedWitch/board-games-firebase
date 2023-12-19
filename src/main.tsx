@@ -9,10 +9,10 @@ import { CartProvider } from './contexts/CartContext'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CartProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <CartProvider>
         <RouterProvider router={router} />
-      </AuthProvider>
-    </CartProvider>
+      </CartProvider>
+    </AuthProvider>
   </React.StrictMode>,
 )

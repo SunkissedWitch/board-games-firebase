@@ -1,7 +1,12 @@
-import { PropsWithChildren, createContext, useContext, useState } from 'react'
+import { DocumentData, DocumentReference, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
+import { useAuth } from './AuthContext'
+import { cartsRef, productsRef } from '../utils/collectionRefferences'
+import { db } from '../firebase'
 
 export type CartProductType = {
   productId: string,
+  productData: DocumentReference<DocumentData, DocumentData>,
   quantity: number
 }
 
@@ -33,12 +38,36 @@ export function useCart() {
 
 export function CartProvider ({ children }: PropsWithChildren) {
   const [products, setProducts] = useState<CartProductType[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const { currentUser } = useAuth()
+  console.log('[CartProvider][products]', products)
+  
+  async function getCartData () {
+    console.log('currentUser', currentUser)
+    if (currentUser?.uid) {
+      const docsRef = doc(cartsRef, currentUser?.uid);
+      const docSnap = await getDoc(docsRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+        setProducts([])
+        setLoading(false)
+      }
+      }
+      return setLoading(false)
+    }
+
+  useEffect(() => {
+    getCartData()
+  }, [currentUser])
 
   function clearCart () {
     return setProducts([])
   }
 
-  function changeProductQuantity (productId: string, quantity: number) {
+  async function changeProductQuantity (productId: string, quantity: number) {
     const newValue = products.map((product) => {
       if (product?.productId === productId) {
         return {
@@ -48,6 +77,15 @@ export function CartProvider ({ children }: PropsWithChildren) {
       }
       return product
     })
+    try {
+      const orderRef = doc(cartsRef, currentUser?.uid)
+      console.log('[changeProductQuantity]', orderRef)
+      await updateDoc(orderRef, {
+        orderList: newValue
+    })
+    } catch (error) {
+      console.log('[changeProductQuantity][error]', error)
+    }
     return setProducts(newValue)
   }
 
@@ -55,16 +93,35 @@ export function CartProvider ({ children }: PropsWithChildren) {
     return products?.filter((product) => (product?.productId === productId))[0]?.quantity || 0
   }
   
-  function addToCart (incomingProductId: string) {
+  async function addToCart (incomingProductId: string) {
     const indexProduct = products.findIndex(({ productId }) => productId === incomingProductId)
-    if (indexProduct === -1) {
-      return setProducts((prevState) => ([
-        ...prevState,
-        {
-          productId: incomingProductId,
-          quantity: 1
-        }
-      ]))
+    console.log('indexProduct', indexProduct)
+    if (indexProduct === -1 && currentUser) {
+      const docData = {
+        userUid: currentUser?.uid,
+        orderList: [
+          ...products,
+          {
+            productId: incomingProductId,
+            productData: doc(productsRef, incomingProductId),
+            quantity: 1
+          }
+        ],
+      }
+      try {
+        await setDoc(doc(db, "carts", currentUser?.uid), docData)
+        return setProducts((prevState) => ([
+          ...prevState,
+          {
+            productId: incomingProductId,
+            productData: doc(productsRef, incomingProductId),
+            quantity: 1
+          }
+        ]))
+        
+      } catch (error) {
+        console.log('error [setDoc][addToCart]', error)
+      }
     }
     return changeProductQuantity(incomingProductId, products[indexProduct].quantity + 1)
     // return setProducts(newValue)
@@ -94,7 +151,7 @@ export function CartProvider ({ children }: PropsWithChildren) {
 
   return (
     <CartContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </CartContext.Provider>
   )
 }

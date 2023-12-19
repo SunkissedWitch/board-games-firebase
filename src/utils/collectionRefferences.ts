@@ -4,11 +4,13 @@ import { db } from "../firebase";
 const categoriesRef = collection(db, 'categories')
 const productsRef = collection(db, 'products')
 const ordersRef = collection(db, 'orders')
+const cartsRef = collection(db, 'carts')
 const usersRef = collection(db, 'users')
 
 export {
   categoriesRef,
   productsRef,
   ordersRef,
+  cartsRef,
   usersRef
 }
