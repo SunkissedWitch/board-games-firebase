@@ -6,7 +6,7 @@ import { CartView } from '../components/CartView'
 
 export const Cart = () => {
   const [products, setProducts] = useState<DocumentData[]>([])
-  console.log('products', products)
+  console.log('Cart [products]', products)
   const { products: cartProductsList } = useCart()
 
 
@@ -17,6 +17,8 @@ export const Cart = () => {
       const q = query(productsRef, where(documentId(), "in", listIDs))
       const snapshotProducts = await getDocs(q)
       const prods = snapshotProducts.docs.map(doc => doc.data())
+      // Todo: add quantity from cart order list context to product data
+      console.log('prods', prods)
       return setProducts(prods)
     }
     return setProducts([])

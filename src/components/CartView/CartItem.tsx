@@ -13,7 +13,7 @@ export const CartItem = ({ product }: CartItemProps) => {
   // const [amount, setAmount] = useState<number>(getProductQuantity(product?.productId))
   const price = product?.description?.price || 0
   const [currentPrice, setCurrentPrice] = useState<number>(price)
-  console.log('product', product)
+  console.log('CartItem [product]', product)
 
   const add = () => {
     // setAmount((prevState) => prevState + 1)

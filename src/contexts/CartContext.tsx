@@ -3,16 +3,17 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export type CartProductType = {
-  productId: string,
-  productData: DocumentReference<DocumentData, DocumentData>,
+  productId: string
+  productData: DocumentReference<DocumentData, DocumentData>
   quantity: number
 }
 
 interface CartContextProps {
   products: CartProductType[]
+  totalItems: number
   clearCart: () => void
   addToCart: (productId: string) => void
   removeFromCart: (productId: string) => void
@@ -23,12 +24,13 @@ interface CartContextProps {
 
 const cartCtxDefaultValue = {
   products: [],
+  totalItems: 0,
   clearCart: () => {},
   addToCart: (_productId: string) => {},
   removeFromCart: (_productId: string) => {},
   updateList: (_props: CartProductType[]) => {},
   changeProductQuantity: (_productId: string, _quantity: number) => {},
-  getProductQuantity: (_productId: string) => 0
+  getProductQuantity: (_productId: string) => 0,
 }
 
 const CartContext = createContext<CartContextProps>(cartCtxDefaultValue)
@@ -37,122 +39,131 @@ export function useCart() {
   return useContext(CartContext)
 }
 
-export function CartProvider ({ children }: PropsWithChildren) {
+
+const sumItems = (arrayCollection: CartProductType[]) => {
+  let sum = 0
+  arrayCollection.forEach(element => {
+    return  sum = sum + element.quantity
+  })
+  console.log('sum', sum)
+  return sum
+}
+
+export function CartProvider({ children }: PropsWithChildren) {
   const [products, setProducts] = useState<CartProductType[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [totalItems, setTotalItems] = useState<number>(0)
   const { currentUser } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  
-  async function getCartData () {
-    console.log('currentUser', currentUser)
+  const orderRef = doc(cartsRef, currentUser?.uid)
+
+  async function getCartData() {
     if (currentUser?.uid) {
-      const docsRef = doc(cartsRef, currentUser?.uid);
-      const docSnap = await getDoc(docsRef);
+      const docsRef = doc(cartsRef, currentUser?.uid)
+      const docSnap = await getDoc(docsRef)
       if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
+        console.log('Document data:', docSnap.data())
+        const orderList: CartProductType[] = docSnap.get('orderList')
+        setTotalItems(sumItems(orderList))
+        setProducts(orderList)
       } else {
         // docSnap.data() will be undefined in this case
-        console.log("No such document!");
+        console.log('No such document!')
         setProducts([])
+        setTotalItems(0)
         setLoading(false)
       }
-      }
-      return setLoading(false)
     }
+    return setLoading(false)
+  }
+
+  const updateList = async(newValue: CartProductType[] | []) => {
+    try {
+      await updateDoc(orderRef, {
+        orderList: newValue,
+      })
+      getCartData()
+    } catch (error) {
+      console.log('updateList [error]', error)
+    }
+  }
 
   useEffect(() => {
     getCartData()
   }, [currentUser])
 
-  function clearCart () {
-    return setProducts([])
+  function clearCart() {
+    return updateList([])
   }
 
-  async function changeProductQuantity (productId: string, quantity: number) {
+  function changeProductQuantity(productId: string, quantity: number) {
     const newValue = products.map((product) => {
       if (product?.productId === productId) {
         return {
           ...product,
-          quantity: quantity
+          quantity: quantity,
         }
       }
       return product
     })
-    try {
-      const orderRef = doc(cartsRef, currentUser?.uid)
-      console.log('[changeProductQuantity]', orderRef)
-      await updateDoc(orderRef, {
-        orderList: newValue
-    })
-    } catch (error) {
-      console.log('[changeProductQuantity][error]', error)
-    }
-    return setProducts(newValue)
+    updateList(newValue)
   }
 
-  function getProductQuantity (productId: string ) {
-    return products?.filter((product) => (product?.productId === productId))[0]?.quantity || 0
+  function getProductQuantity(productId: string) {
+    return (
+      products?.filter((product) => product?.productId === productId)[0]?.quantity || 0
+    )
   }
-  
-  async function addToCart (incomingProductId: string) {
+
+  async function addToCart(incomingProductId: string) {
     if (currentUser) {
-    const indexProduct = products.findIndex(({ productId }) => productId === incomingProductId)
-    console.log('indexProduct', indexProduct)
-    if (indexProduct === -1) {
-      const docData = {
-        userUid: currentUser?.uid,
-        orderList: [
-          ...products,
-          {
-            productId: incomingProductId,
-            productData: doc(productsRef, incomingProductId),
-            quantity: 1
-          }
-        ],
+      const indexProduct = products.findIndex(
+        ({ productId }) => productId === incomingProductId
+      )
+      if (indexProduct === -1) {
+        const docData = {
+          orderList: [
+            ...products,
+            {
+              productId: incomingProductId,
+              productData: doc(productsRef, incomingProductId),
+              quantity: 1,
+            },
+          ],
+        }
+        try {
+          await setDoc(doc(db, 'carts', currentUser?.uid), docData)
+          return getCartData()
+        } catch (error) {
+          console.log('error [setDoc][addToCart]', error)
+        }
       }
-      try {
-        await setDoc(doc(db, "carts", currentUser?.uid), docData)
-        return setProducts((prevState) => ([
-          ...prevState,
-          {
-            productId: incomingProductId,
-            productData: doc(productsRef, incomingProductId),
-            quantity: 1
-          }
-        ]))
-        
-      } catch (error) {
-        console.log('error [setDoc][addToCart]', error)
-      }
+      return changeProductQuantity(
+        incomingProductId,
+        products[indexProduct]?.quantity + 1
+      )
     }
-    return changeProductQuantity(incomingProductId, products[indexProduct]?.quantity + 1)
-  }
     return navigate('/login', { replace: true, state: location })
-    // return setProducts(newValue)
   }
 
-  function removeFromCart (removeProduct: string) {  
-    const newList = products.filter(function ({ productId }) { 
+  function removeFromCart(removeProduct: string) {
+    const newList = products.filter(function ({ productId }) {
       return productId !== removeProduct
     })
-    return setProducts(newList)
-  }
-
-  const updateList = (newValue: CartProductType[] |[]) => {
-    setProducts(newValue)
+    updateList(newList)
   }
 
   const value: CartContextProps = {
     products,
+    totalItems,
     changeProductQuantity,
     getProductQuantity,
     clearCart,
     addToCart,
     removeFromCart,
-    updateList
+    updateList,
   }
-  console.log('context products', products)
 
   return (
     <CartContext.Provider value={value}>
