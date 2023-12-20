@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthErrorCodes } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { PasswordInput } from '../components/PasswordInput'
 import { TextInput } from '../components/TextInput'
@@ -30,11 +30,12 @@ export const Login = () => {
   })
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
       await login({ email, password })
-      navigate('/')
+      navigate(location?.state ? location.state : '/')
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code

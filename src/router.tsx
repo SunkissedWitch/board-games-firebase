@@ -6,10 +6,11 @@ import { Orders } from "./pages/order"
 import { Login } from "./pages/login"
 import { Signup } from "./pages/signup"
 import { Cart } from "./pages/cart"
+import { CartProvider } from "./contexts/CartContext"
 
 export const router = createBrowserRouter([
   {
-    element: <RootLayout />,
+    element: <CartProvider><RootLayout /></CartProvider>,
     children: [
       {
         path: '/login',

@@ -3,6 +3,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 export type CartProductType = {
   productId: string,
@@ -40,7 +41,8 @@ export function CartProvider ({ children }: PropsWithChildren) {
   const [products, setProducts] = useState<CartProductType[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const { currentUser } = useAuth()
-  console.log('[CartProvider][products]', products)
+  const navigate = useNavigate()
+  const location = useLocation()
   
   async function getCartData () {
     console.log('currentUser', currentUser)
@@ -94,9 +96,10 @@ export function CartProvider ({ children }: PropsWithChildren) {
   }
   
   async function addToCart (incomingProductId: string) {
+    if (currentUser) {
     const indexProduct = products.findIndex(({ productId }) => productId === incomingProductId)
     console.log('indexProduct', indexProduct)
-    if (indexProduct === -1 && currentUser) {
+    if (indexProduct === -1) {
       const docData = {
         userUid: currentUser?.uid,
         orderList: [
@@ -123,7 +126,9 @@ export function CartProvider ({ children }: PropsWithChildren) {
         console.log('error [setDoc][addToCart]', error)
       }
     }
-    return changeProductQuantity(incomingProductId, products[indexProduct].quantity + 1)
+    return changeProductQuantity(incomingProductId, products[indexProduct]?.quantity + 1)
+  }
+    return navigate('/login', { replace: true, state: location })
     // return setProducts(newValue)
   }
 
