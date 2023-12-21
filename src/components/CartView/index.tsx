@@ -1,15 +1,27 @@
 import { DocumentData } from "firebase/firestore"
 import { CartItem } from "./CartItem"
+import { TotalPrice } from "./TotalPrice"
 import { useCart } from "../../contexts/CartContext"
+import { forEach } from "lodash"
 
 interface CartViewProps {
   products: DocumentData[]
 }
 
 export const CartView = ({ products }: CartViewProps) => {
-  const { clearCart } = useCart()
-  // ToDo: find the right way to set total price
-  // const totalPrice = 10000
+  const { clearCart, totalItems } = useCart()
+
+  const getTotalPrice = () => {
+    let sum = 0
+    forEach(products, (product) => {
+      const productTotal = product.quantity * product.description.price
+      return sum = productTotal + sum
+    })
+    return sum
+  }
+
+  const totalPrice = getTotalPrice()
+
   if (products?.length === 0) {
     return(
       <div className='p-5 border bg-secondary text-secondary-content text-center'>Cart is empty. Add something {';)'}</div>
@@ -23,10 +35,7 @@ export const CartView = ({ products }: CartViewProps) => {
       {products.map((product: DocumentData) => {
         return <CartItem key={product.productId} product={product} />
       })}
-      {/* <div className='flex flex-row justify-between items-baseline gap-5'>
-        <div>Total:</div>
-        <div>{totalPrice}</div>
-      </div> */}
+      <TotalPrice totalPrice={totalPrice} totalItems={totalItems}/>
     </div>
   )
 }

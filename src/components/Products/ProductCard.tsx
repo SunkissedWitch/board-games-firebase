@@ -4,7 +4,7 @@ import { formattedPrice } from "../../utils/helpers";
 
 export const ProductCard = ({ product }: DocumentData) => {
   const navigate = useNavigate()
-  const price = product?.description?.price.toString()
+  const price = product?.description?.price
 
   return (
     <div className="card card-compact">

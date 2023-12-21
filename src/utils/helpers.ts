@@ -1,3 +1,3 @@
-export function formattedPrice (price: string = '0') {
-  return price.replace(`${price.at(-3)}`, ` ${price.at(-3)}`).trimStart()
+export function formattedPrice (price: number = 0) {
+  return price.toLocaleString()
 }

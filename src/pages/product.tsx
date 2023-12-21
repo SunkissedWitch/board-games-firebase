@@ -41,7 +41,7 @@ export const ProductPage = () => {
         <div className='md:col-span-2 flex flex-col gap-y-5'>
           <h1 className='text-3xl font-semibold text-center'>{product?.title}</h1>
           <p className='text-lg font-medium text-base-content text-opacity-50'>{product?.description?.subtitle}</p>
-          <div className='text-3xl font-semibold'>{formattedPrice(product?.description?.price.toString())} грн</div>
+          <div className='text-3xl font-semibold'>{formattedPrice(product?.description?.price)} грн</div>
           <div>Raiting 5 stars</div>
           <div className="grid grid-cols-2 gap-5 max-w-xs mt-auto">
             <button className='btn btn-outline' onClick={addToCartHelper}>
