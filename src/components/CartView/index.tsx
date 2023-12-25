@@ -3,12 +3,15 @@ import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
 import { useCart } from "../../contexts/CartContext"
 import { forEach } from "lodash"
+import { Dispatch, SetStateAction } from "react"
+import { AddressForm } from "./AddressForm"
 
 interface CartViewProps {
   products: DocumentData[]
+  setIsSubmited: Dispatch<SetStateAction<boolean>>
 }
 
-export const CartView = ({ products }: CartViewProps) => {
+export const CartView = ({ products, setIsSubmited }: CartViewProps) => {
   const { clearCart, totalItems, products: cartState } = useCart()
 
   const getTotalPrice = () => {
@@ -19,7 +22,10 @@ export const CartView = ({ products }: CartViewProps) => {
     })
     return sum
   }
-  const createOrder = () => console.log('order', cartState, products)
+  const createOrder = async () => {
+    console.log('order', cartState, products)
+    setIsSubmited(true)
+  }
 
   const totalPrice = getTotalPrice()
 
@@ -30,7 +36,7 @@ export const CartView = ({ products }: CartViewProps) => {
   }
 
   return (
-    <div className='px-2.5 sm:px-5 py-5 container mx-auto grid grid-flow-col grid-cols-3 gap-5 items-start'>
+    <div className='px-2.5 sm:px-5 py-5 container mx-auto grid grid-cols-3 gap-5 items-start'>
       <div className='flex flex-col gap-2.5 grow col-span-full lg:col-span-2'>
         <div className='text-xl font-bold px-2.5'>Your order:</div>
         <button type='button' className='btn btn-outline btn-sm w-32 ms-auto' onClick={clearCart}>Clear cart</button>
@@ -43,6 +49,9 @@ export const CartView = ({ products }: CartViewProps) => {
         <div className='grid grid-cols-2 py-2.5'>
           <button className='btn btn-primary col-span-full sm:col-span-1 lg:col-span-full sm:col-start-2 lg:col-start-0' onClick={createOrder}>Create order</button>
         </div>
+      </div>
+      <div className='col-span-full'>
+        <AddressForm />
       </div>
     </div>
   )
