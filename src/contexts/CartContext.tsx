@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
 import { useLocation, useNavigate } from 'react-router-dom'
-
+// продовжити загальний підсумок корзини, додати створення ордеру.
 export type CartProductType = {
   productId: string
   productData: DocumentReference<DocumentData, DocumentData>
