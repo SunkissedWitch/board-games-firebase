@@ -4,11 +4,9 @@ import { productsRef } from '../utils/collectionRefferences'
 import { CartProductType, useCart } from '../contexts/CartContext'
 import { CartView } from '../components/CartView'
 import _ from 'lodash'
-import { AddressForm } from '../components/CartView/AddressForm'
 
 export const Cart = () => {
   const [products, setProducts] = useState<DocumentData[]>([])
-  const [isSubmited, setIsSubmited] = useState(false)
   console.log('Cart [products]', products)
   const { products: cartProductsList } = useCart()
 
@@ -32,7 +30,7 @@ export const Cart = () => {
   }, [cartProductsList])
 
   return (
-    <CartView products={products} setIsSubmited={setIsSubmited} />
+    <CartView products={products} />
   )
 }
 

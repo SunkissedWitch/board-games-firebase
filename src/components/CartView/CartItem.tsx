@@ -17,7 +17,7 @@ export const CartItem = ({ product }: CartItemProps) => {
   const showProductPage = () => navigate(`/${category}/${productId}`)
 
   return (
-    <div className='flex flex-row flex-nowrap gap-x-3 p-3 border'>
+    <div className='flex flex-row flex-nowrap gap-x-3 p-3 card card-bordered shadow-lg'>
       <figure className='shrink-0'>
         <img src={photo} alt={title} className='h-16'></img>
       </figure>

@@ -12,7 +12,7 @@ export const TotalPrice = ({ totalPrice, totalItems }: TotalPriceProps) => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="font-semibold text-center underline underline-offset-2 text-lg">Order summary</div>
+      <div className="card-title justify-center underline underline-offset-2">Order summary</div>
       <div className="flex flex-row gap-2.5 items-baseline">
         <div className='text-lg font-medium'>Total products:</div>
         <div className='border-b border-dashed border-primary flex-grow' />
