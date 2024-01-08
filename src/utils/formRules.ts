@@ -15,7 +15,7 @@ const addressRules = {
   },
   address: {
     required: 'Enter your address',
-    minLength: { value: 20, message: 'Too short address'}
+    minLength: { value: 4, message: 'Too short address'}
   },
   tel: {
     required: 'Enter your phone number'

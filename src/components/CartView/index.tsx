@@ -1,4 +1,4 @@
-import { DocumentData, doc, serverTimestamp, setDoc } from "firebase/firestore"
+import { DocumentData, addDoc, serverTimestamp } from "firebase/firestore"
 import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
 import { useCart } from "../../contexts/CartContext"
@@ -7,6 +7,7 @@ import { useState } from "react"
 import { AddressForm, AddressInputsProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
 import { useAuth } from "../../contexts/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 interface CartViewProps {
   products: DocumentData[]
@@ -17,6 +18,7 @@ export const CartView = ({ products }: CartViewProps) => {
   const { currentUser } = useAuth()
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<AddressInputsProps | null>(null)
+  const navigate = useNavigate()
 
   const getTotalPrice = () => {
     let sum = 0
@@ -41,8 +43,11 @@ export const CartView = ({ products }: CartViewProps) => {
     }
     console.log('order', docData)
     try {
-      const create = await setDoc(doc(ordersRef), docData)
-      console.log('create', create)
+      const create = await addDoc(ordersRef, docData)
+      if (create?.id) {
+        clearCart()
+        navigate(`/cart/success/${create?.id}`)
+      }
     } catch (error) {
       console.log('error', error)
     }

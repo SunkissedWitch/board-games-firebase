@@ -2,11 +2,12 @@ import { createBrowserRouter } from "react-router-dom"
 import { RootLayout } from "./RootLayout"
 import { Home } from "./pages/home"
 import { ProductPage, getCurrentProduct } from "./pages/product"
-import { Orders } from "./pages/order"
+import { Orders } from "./pages/orders"
 import { Login } from "./pages/login"
 import { Signup } from "./pages/signup"
 import { Cart } from "./pages/cart"
 import { CartProvider } from "./contexts/CartContext"
+import { SuccessPage } from "./pages/cartSuccess"
 
 export const router = createBrowserRouter([
   {
@@ -32,11 +33,19 @@ export const router = createBrowserRouter([
       },
       {
         path: '/orders',
-        element: <Orders />
+        element: <Orders />,
+      },
+      {
+        path: '/orders/:orderId',
+        element: <div>New Order</div>
       },
       {
         path: '/cart',
         element: <Cart />
+      },
+      {
+        path: '/cart/success/:orderId',
+        element: <SuccessPage />
       }
     ]
   }

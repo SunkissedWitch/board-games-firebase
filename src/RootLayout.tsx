@@ -54,7 +54,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
           {/* <CartButton /> */}
         </div>
       </div>
-      <main className='flex flex-col'>{<Outlet /> || children}</main>
+      <main className='flex flex-col grow'>{<Outlet /> || children}</main>
     </>
   )
 }

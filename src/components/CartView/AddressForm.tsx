@@ -119,7 +119,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
           <TextInput
             {...register('postOffice', addressRules.postOffice)}
             placeholder="#20"
-            autoComplete="shipping street-address"
+            autoComplete="shipping address-level3"
           />
           <div className="label">
             {errors?.postOffice && (
