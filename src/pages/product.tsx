@@ -28,7 +28,7 @@ export const ProductPage = () => {
   const { addToCart } = useCart()
   const addToCartHelper = () => {
     console.log(docId)
-    addToCart(docId)
+    addToCart(docId, product)
   }
   console.log('product', product, category)
   return (

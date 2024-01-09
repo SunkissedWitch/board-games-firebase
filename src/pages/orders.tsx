@@ -1,33 +1,22 @@
 import { useEffect, useState } from 'react'
-import { getDocs, query, where, DocumentData, documentId, doc } from 'firebase/firestore'
-import { ordersRef, productsRef, usersRef } from '../utils/collectionRefferences'
+import { getDocs, query, where, DocumentData } from 'firebase/firestore'
+import { ordersRef } from '../utils/collectionRefferences'
+import { useAuth } from '../contexts/AuthContext'
+import { Order } from '../components/Orders/Order'
 
 export const Orders = () => {
-  const [orders, setOrders] = useState<DocumentData>([])
+  const [orders, setOrders] = useState<DocumentData[]>([])
+  const { currentUser } = useAuth()
 
-  const userId = 'D9SAkw4qIP7QZKas45dq'
-  // Todo: use firebase/auth to get currentUser, find method to create order with userCredentials
-  const currentUser = doc(usersRef, userId)
   const getOrders = async () => {
     try {
-      const q = query(ordersRef, where('user', '==', currentUser))
+      const q = query(ordersRef, where('userUID', '==', currentUser?.uid))
       const querySnapshot = await getDocs(q)
+      let ordersData: DocumentData[] = []
       querySnapshot.forEach(async (orderDoc) => {
-        if (orderDoc.data().order) {
-          const productsRefDocsArray = orderDoc.data().order
-          const productsQuery = query(
-            productsRef,
-            where(documentId(), 'in', productsRefDocsArray)
-          )
-
-          const productsDocsSnap = await getDocs(productsQuery)
-          let newOrders: DocumentData[] = []
-          productsDocsSnap.forEach((doc) =>
-            newOrders.push({ id: doc.id, ...doc.data() })
-          )
-          setOrders(newOrders)
-        }
+        ordersData.push({...orderDoc.data(), orderId: orderDoc.id })
       })
+      setOrders(ordersData)
     } catch (error) {
       console.log('error', error)
     }
@@ -41,15 +30,12 @@ export const Orders = () => {
   return (
     <>
       <div className='px-5 container mx-auto'>
-        Order:
-        <ul className='p-2 border'>
+        Orders:
+        <div className='flex flex-col gap-5'>
           {orders?.map((order: DocumentData) => (
-            <li key={order?.id}>
-              {order?.category} / {order?.title} / {order?.description?.price}{' '}
-              uah
-            </li>
+            <Order key={order?.orderId} order={order} />
           ))}
-        </ul>
+        </div>
       </div>
     </>
   )

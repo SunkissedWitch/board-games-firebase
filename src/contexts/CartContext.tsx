@@ -4,10 +4,12 @@ import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
 import { useLocation, useNavigate } from 'react-router-dom'
-// продовжити загальний підсумок корзини, додати створення ордеру.
+import { pick, get } from 'lodash'
+
 export type CartProductType = {
   productId: string
-  productData: DocumentReference<DocumentData, DocumentData>
+  productData: DocumentData
+  productReference: DocumentReference<DocumentData, DocumentData>
   quantity: number
 }
 
@@ -15,7 +17,7 @@ interface CartContextProps {
   products: CartProductType[]
   totalItems: number
   clearCart: () => void
-  addToCart: (productId: string) => void
+  addToCart: (productId: string, productData: DocumentData) => void
   removeFromCart: (productId: string) => void
   updateList: (props: CartProductType[]) => void
   changeProductQuantity: (productId: string, quantity: number) => void
@@ -26,7 +28,7 @@ const cartCtxDefaultValue = {
   products: [],
   totalItems: 0,
   clearCart: () => {},
-  addToCart: (_productId: string) => {},
+  addToCart: (_productId: string, _productData: DocumentData) => {},
   removeFromCart: (_productId: string) => {},
   updateList: (_props: CartProductType[]) => {},
   changeProductQuantity: (_productId: string, _quantity: number) => {},
@@ -116,7 +118,12 @@ export function CartProvider({ children }: PropsWithChildren) {
     )
   }
 
-  async function addToCart(incomingProductId: string) {
+  async function addToCart(incomingProductId: string, productData: DocumentData) {
+    const minProductData = {
+      ...pick(productData, ['title', 'productId', 'category']),
+      price: get(productData, ['description', 'price'], 0)
+    }
+    console.log('minProductData', minProductData)
     if (currentUser) {
       const indexProduct = products.findIndex(
         ({ productId }) => productId === incomingProductId
@@ -127,7 +134,8 @@ export function CartProvider({ children }: PropsWithChildren) {
             ...products,
             {
               productId: incomingProductId,
-              productData: doc(productsRef, incomingProductId),
+              productReference: doc(productsRef, incomingProductId),
+              productData: minProductData,
               quantity: 1,
             },
           ],
