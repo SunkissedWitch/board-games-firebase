@@ -30,8 +30,8 @@ export const Orders = () => {
   return (
     <>
       <div className='px-5 container mx-auto'>
-        Orders:
-        <div className='flex flex-col gap-5'>
+        <h1 className='text-lg font-medium leading-10 mb-2.5'>My Orders:</h1>
+        <div className='flex flex-col gap-2.5'>
           {orders?.map((order: DocumentData) => (
             <Order key={order?.orderId} order={order} />
           ))}

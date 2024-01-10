@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { pick, get } from 'lodash'
+import { head, chain, get, pick } from 'lodash'
 
 export type CartProductType = {
   productId: string
@@ -119,9 +119,11 @@ export function CartProvider({ children }: PropsWithChildren) {
   }
 
   async function addToCart(incomingProductId: string, productData: DocumentData) {
+    console.log('photo', head(get(productData,  ['description', 'photo'], [])))
     const minProductData = {
       ...pick(productData, ['title', 'productId', 'category']),
-      price: get(productData, ['description', 'price'], 0)
+      price: get(productData, ['description', 'price'], 0),
+      photo: head(get(productData,  ['description', 'photo'], []))
     }
     console.log('minProductData', minProductData)
     if (currentUser) {
