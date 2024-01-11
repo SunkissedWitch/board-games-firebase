@@ -19,7 +19,7 @@ export const CartItem = ({ product }: CartItemProps) => {
   return (
     <div className='flex flex-row flex-nowrap gap-x-3 p-3 card card-bordered shadow-lg'>
       <figure className='shrink-0'>
-        <img src={photo} alt={title} className='h-16'></img>
+        <img src={photo} alt={title} className='h-16 place-self-start'></img>
       </figure>
       <div className='grow flex flex-row w-full justify-between gap-2.5'>
         <div className='flex flex-col md:flex-row gap-2.5 grow'>
@@ -30,7 +30,7 @@ export const CartItem = ({ product }: CartItemProps) => {
             <div className='group-hover:underline group-hover:underline-offset-4 text-lg'>
               {title}
             </div>
-            <div className='font-bold'>{formattedPrice(price)} hrn</div>
+            <div className='font-bold'>{formattedPrice(price)} ₴</div>
           </div>
           <Counter quantity={quantity} productId={productId} />
         </div>
@@ -39,10 +39,10 @@ export const CartItem = ({ product }: CartItemProps) => {
             className='btn btn-square btn-ghost btn-sm self-end md:self-start'
             onClick={remove}
           >
-            <XMarkIcon className='w-4 h-4 sm:w-5 sm:h-5' />
+            <XMarkIcon className='w-5 h-5' />
           </button>
           <div className='font-medium text-end md:place-self-center'>
-            {formattedPrice(price * quantity)} hrn
+            {formattedPrice(price * quantity)} ₴
           </div>
         </div>
       </div>

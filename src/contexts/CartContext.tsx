@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { head, chain, get, pick } from 'lodash'
+import { head, get, pick } from 'lodash'
 
 export type CartProductType = {
   productId: string

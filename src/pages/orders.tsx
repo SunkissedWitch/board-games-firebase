@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getDocs, query, where, DocumentData } from 'firebase/firestore'
 import { ordersRef } from '../utils/collectionRefferences'
 import { useAuth } from '../contexts/AuthContext'
-import { Order } from '../components/Orders/Order'
+import { OrderCard } from '../components/Orders/Order'
 
 export const Orders = () => {
   const [orders, setOrders] = useState<DocumentData[]>([])
@@ -33,7 +33,7 @@ export const Orders = () => {
         <h1 className='text-lg font-medium leading-10 mb-2.5'>My Orders:</h1>
         <div className='flex flex-col gap-2.5'>
           {orders?.map((order: DocumentData) => (
-            <Order key={order?.orderId} order={order} />
+            <OrderCard key={order?.orderId} order={order} />
           ))}
         </div>
       </div>

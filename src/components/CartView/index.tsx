@@ -72,7 +72,7 @@ export const CartView = ({ products }: CartViewProps) => {
         })}
         <AddressForm onSubmit={onSubmitAddress} />
       </div>
-      <div className='card card-bordered shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-slate-50'>
+      <div className='card card-bordered shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-accent bg-opacity-30'>
         <TotalPrice totalPrice={totalPrice} totalItems={totalItems} />
         <div className='grid grid-cols-2 gap-10 px-5 py-2.5'>
           <button

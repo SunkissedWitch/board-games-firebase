@@ -9,6 +9,14 @@ export default {
   },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["lofi"],
+    themes: [
+      "lofi"
+      // {
+      //   lofi: {
+      //     ...require("daisyui/src/theming/themes")["lofi"],
+      //     accent: "#48a3f6",
+      //   },
+      // },
+    ],
   },
 }
