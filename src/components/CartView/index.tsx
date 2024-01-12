@@ -2,12 +2,13 @@ import { DocumentData, addDoc, serverTimestamp } from "firebase/firestore"
 import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
 import { useCart } from "../../contexts/CartContext"
-import { forEach } from "lodash"
+import { forEach, get } from "lodash"
 import { useState } from "react"
 import { AddressForm, AddressInputsProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
 import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
+import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
 
 interface CartViewProps {
   products: DocumentData[]
@@ -21,12 +22,14 @@ export const CartView = ({ products }: CartViewProps) => {
   const navigate = useNavigate()
 
   const getTotalPrice = () => {
-    let sum = 0
+    let totalArray: number[] = []
     forEach(products, (product) => {
-      const productTotal = product?.quantity * product?.description?.price
-      return sum = productTotal + sum
+      const price = get(product, ['description', 'price'], 0)
+      const quantity = get(product, 'quantity', 0)
+      const total = getTotalItemPrice(price, quantity)
+      totalArray.push(total)
     })
-    return sum
+    return getTotalPriceUtil(totalArray)
   }
 
   const onSubmitAddress = (values: AddressInputsProps) => {
@@ -58,7 +61,9 @@ export const CartView = ({ products }: CartViewProps) => {
 
   if (products?.length === 0) {
     return(
-      <div className='p-5 border bg-secondary text-secondary-content text-center'>Cart is empty. Add something {';)'}</div>
+      <div className='p-5 border bg-secondary text-secondary-content text-center'>
+        Cart is empty. Add something {';)'}
+      </div>
     )
   }
 

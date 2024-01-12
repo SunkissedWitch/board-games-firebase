@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { head, get, pick } from 'lodash'
+import { head, get, pick, sum } from 'lodash'
 
 export type CartProductType = {
   productId: string
@@ -43,12 +43,8 @@ export function useCart() {
 
 
 const sumItems = (arrayCollection: CartProductType[]) => {
-  let sum = 0
-  arrayCollection.forEach(element => {
-    return  sum = sum + element.quantity
-  })
-  console.log('sum', sum)
-  return sum
+  const pricesArray: number[] = arrayCollection.map((element: CartProductType) => element.quantity)
+  return sum(pricesArray)
 }
 
 export function CartProvider({ children }: PropsWithChildren) {

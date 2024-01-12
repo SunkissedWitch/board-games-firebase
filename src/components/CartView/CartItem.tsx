@@ -18,7 +18,7 @@ export const CartItem = ({ product }: CartItemProps) => {
 
   return (
     <div className='flex flex-row flex-nowrap gap-x-3 p-3 card card-bordered shadow-lg'>
-      <figure className='shrink-0'>
+      <figure className='shrink-0 h-16 bg-base-300'>
         <img src={photo} alt={title} className='h-16 place-self-start'></img>
       </figure>
       <div className='grow flex flex-row w-full justify-between gap-2.5'>

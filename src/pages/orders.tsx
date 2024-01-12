@@ -21,7 +21,6 @@ export const Orders = () => {
       console.log('error', error)
     }
   }
-  console.log('orders', orders)
 
   useEffect(() => {
     getOrders()
@@ -30,8 +29,8 @@ export const Orders = () => {
   return (
     <>
       <div className='px-5 container mx-auto'>
-        <h1 className='text-lg font-medium leading-10 mb-2.5'>My Orders:</h1>
-        <div className='flex flex-col gap-2.5'>
+        <h1 className='text-lg font-medium leading-10'>My Orders:</h1>
+        <div className='flex flex-col gap-5 py-2.5 mb-2.5'>
           {orders?.map((order: DocumentData) => (
             <OrderCard key={order?.orderId} order={order} />
           ))}
