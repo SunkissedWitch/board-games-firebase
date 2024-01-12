@@ -10,7 +10,7 @@ export const OrderListItem = ({ data, quantity }: DataProps) => {
   const { title, category, price, photo, productId } = data
   return (
     <div className='flex flex-row gap-2.5 py-2.5'>
-      <figure className='shrink-0 h-16 bg-base-300'>
+      <figure className='shrink-0 h-16 w-16 bg-base-300'>
         <img src={photo} alt={title} className='h-16 place-self-start' />
       </figure>
       <div className='flex flex-col gap-2.5 justify-between grow'>
