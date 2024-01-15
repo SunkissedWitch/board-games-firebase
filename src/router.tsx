@@ -8,6 +8,7 @@ import { Signup } from "./pages/signup"
 import { Cart } from "./pages/cart"
 import { CartProvider } from "./contexts/CartContext"
 import { SuccessPage } from "./pages/cartSuccess"
+import { OrderPage } from "./pages/order"
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +38,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/orders/:orderId',
-        element: <div>New Order</div>
+        element: <OrderPage />
       },
       {
         path: '/cart',

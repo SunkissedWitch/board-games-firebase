@@ -88,7 +88,7 @@ export function CartProvider({ children }: PropsWithChildren) {
   }
 
   useEffect(() => {
-    getCartData()
+    if (currentUser !== null) getCartData()
   }, [currentUser])
 
   function clearCart() {

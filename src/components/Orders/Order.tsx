@@ -31,7 +31,7 @@ type DeliveryDataProps = {
   tel: string
 }
 
-interface IOrder {
+export interface IOrder {
   createdAt?: Timestamp
   orderData?: OrderDataProps[]
   deliveryData?: DeliveryDataProps
