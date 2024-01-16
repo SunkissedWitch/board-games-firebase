@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { TextInput } from "../TextInput";
 import { addressRules } from "../../utils/formRules"
+import { POST_SERVICES } from "../../utils/constants";
+import { entries, head, keys } from "lodash";
 
 export type AddressInputsProps = {
   city: string
@@ -27,7 +29,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
       city: "",
       address: "",
       tel: "",
-      courierServise: 'nova_poshta',
+      courierServise: head(keys(POST_SERVICES)) || 'nova_poshta',
       postCode: "",
       postOffice: "",
       username: "",
@@ -85,8 +87,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
         <label className="form-control w-full">
           <div className="label label-text">Choose a courier service</div>
           <select {...register('courierServise', addressRules.courierServise)} className='select select-bordered'>
-            <option value='nova_poshta'>"Нова пошта"</option>
-            <option value='ukr_poshta'>"Укрпошта"</option>
+            {entries(POST_SERVICES).map(([key, value]) => (<option key={key} value={key}>{value}</option>))}
           </select>
           <div className="label">
             {errors?.courierServise && (
