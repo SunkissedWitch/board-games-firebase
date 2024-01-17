@@ -29,6 +29,7 @@ export type DeliveryDataProps = {
   courierServise: keyof typeof POST_SERVICES
   postCode?: string
   postOffice?: string
+  shippingCoast?: number | 'free'
   tel: string
 }
 

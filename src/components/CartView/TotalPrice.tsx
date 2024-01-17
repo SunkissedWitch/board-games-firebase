@@ -24,7 +24,7 @@ export const TotalPrice = ({ totalPrice, totalItems }: TotalPriceProps) => {
         <div className='text-lg font-medium'>Total price:</div>
         <div className='border-b border-dashed border-primary flex-grow' />
         <div>
-          <b>{formattedTotalPrice}</b> ₴
+          <b>{formattedTotalPrice}</b>
         </div>
       </div>
       <div>

@@ -44,7 +44,7 @@ export const OrderCardHeader = ({
         />
         <HeaderItem
           header='Total:'
-          subheader={<span className='min-w-max'>{formattedPrice(totalPrice)} ₴</span>}
+          subheader={<span className='min-w-max'>{formattedPrice(totalPrice)}</span>}
         />
         <HeaderItem header='Deliver to:' subheader={<span className='text-accent text-opacity-100'>{username}</span>} />
       </div>

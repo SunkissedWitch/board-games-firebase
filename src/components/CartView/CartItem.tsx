@@ -30,7 +30,7 @@ export const CartItem = ({ product }: CartItemProps) => {
             <div className='group-hover:underline group-hover:underline-offset-4 text-lg'>
               {title}
             </div>
-            <div className='font-bold'>{formattedPrice(price)} ₴</div>
+            <div className='font-bold'>{formattedPrice(price)}</div>
           </div>
           <Counter quantity={quantity} productId={productId} />
         </div>
@@ -42,7 +42,7 @@ export const CartItem = ({ product }: CartItemProps) => {
             <XMarkIcon className='w-5 h-5' />
           </button>
           <div className='font-medium text-end md:place-self-center'>
-            {formattedPrice(price * quantity)} ₴
+            {formattedPrice(price * quantity)}
           </div>
         </div>
       </div>

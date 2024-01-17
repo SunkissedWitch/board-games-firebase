@@ -1,6 +1,6 @@
 import { doc, getDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ordersRef } from '../utils/collectionRefferences'
 import { OrderHeader } from '../components/OrderPage/OrderHeader'
 import { IOrder } from '../components/Orders/Order'
@@ -9,10 +9,14 @@ import { OrderListItem } from '../components/Orders/OrderListItem'
 import { IOrderSummary, OrderSummary } from '../components/OrderPage/OrderSummary'
 import { getTotalItemPrice, getTotalPrice } from '../utils/helpers'
 import { forEach, get, sum } from 'lodash'
+import { ContactInfo } from '../components/OrderPage/ContactInfo'
+import { useAuth } from '../contexts/AuthContext'
+import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 
 export const OrderPage = () => {
   const { orderId } = useParams()
   const [order, setOrder] = useState<IOrder>()
+  const { currentUser } = useAuth()
 
   const getOrder = async () => {
     try {
@@ -58,12 +62,24 @@ export const OrderPage = () => {
     totalItems: getTotalItems(),
     totalPrice: getOrderTotalPrice(),
     discount: null,
-    shipping: 'free'
+    shipping: deliveryData?.shippingCoast || 'free'
   }
+  const contactInfoData = deliveryData
+  ? {
+      tel: deliveryData.tel,
+      username: deliveryData.username,
+      email: currentUser?.email || ''
+    }
+  : null
 
   return (
-    <section className='container px-5 mx-auto'>
-      <h1 className='text-lg font-bold mb-3'>Details of your order</h1>
+    <section className='container px-5 mx-auto mb-5'>
+      <div className='py-2.5'>
+        <Link to='/orders' className='link link-primary underline-offset-4 flex gap-1 text-xl'>
+          <ChevronLeftIcon width={20} />Orders
+        </Link>
+      </div>
+      <h1 className='text-xl font-bold mb-3 py-2.5'>Details of your order</h1>
       <div className='border rounded-box'>
         <OrderHeader orderId={orderId || ''} placed={createdAt?.toDate().toLocaleDateString() || ''}/>
         <div className='p-2.5 divide-y'>
@@ -75,9 +91,12 @@ export const OrderPage = () => {
               />
           ))}
         </div>
-        <div className='flex flex-row gap-2.5 border-t'>
+        <div className='flex flex-row flex-wrap-reverse gap-5 border-t bg-base-200 justify-items-stretch px-2.5'>
           <OrderSummary data={summaryData} />
-          {deliveryData && <DeliveryInfo data={deliveryData}/>}
+          <div className='flex flex-row gap-5 flex-wrap grow'>
+            {deliveryData && <DeliveryInfo data={deliveryData}/>}
+            {contactInfoData && <ContactInfo data={contactInfoData} />}
+          </div>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { IProductData } from './Order'
+import { formattedPrice } from '../../utils/helpers'
 
 interface DataProps {
   data: IProductData
@@ -16,7 +17,7 @@ export const OrderListItem = ({ data, quantity }: DataProps) => {
       <div className='flex flex-col gap-2.5 justify-between grow'>
         <Link
           to={`/${category}/${productId}`}
-          className='font-medium hover:underline hover:underline-offset-4'
+          className='font-medium hover:underline hover:underline-offset-4 max-w-max'
         >
           {title}
         </Link>
@@ -27,7 +28,7 @@ export const OrderListItem = ({ data, quantity }: DataProps) => {
           </div>
         </div>
       </div>
-      <div className='min-w-max place-self-end font-medium'>{price} ₴</div>
+      <div className='min-w-max place-self-end font-medium'>{formattedPrice(price)}</div>
     </div>
   )
 }
