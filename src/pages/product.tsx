@@ -3,6 +3,7 @@ import { db } from "../firebase"
 import { DocumentData, doc, getDoc } from "firebase/firestore"
 import { formattedPrice } from "../utils/helpers"
 import { useCart } from "../contexts/CartContext"
+import { StaticRatingComponent } from "../components/RatingComponent/StaticRating"
 
 export const getCurrentProduct = async ({ params }: any) => {
   const { productId, category } = params
@@ -41,8 +42,10 @@ export const ProductPage = () => {
         <div className='md:col-span-2 flex flex-col gap-y-5'>
           <h1 className='text-3xl font-semibold text-center'>{product?.title}</h1>
           <p className='text-lg font-medium text-base-content text-opacity-50'>{product?.description?.subtitle}</p>
-          <div className='text-3xl font-semibold'>{formattedPrice(product?.description?.price)} грн</div>
-          <div>Raiting 5 stars</div>
+          <div className='text-3xl font-semibold'>{formattedPrice(product?.description?.price)}</div>
+          <div>
+            <StaticRatingComponent rating={3} />
+          </div>
           <div className="grid grid-cols-2 gap-5 max-w-xs mt-auto">
             <button className='btn btn-outline' onClick={addToCartHelper}>
               Add to cart
