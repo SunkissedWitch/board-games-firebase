@@ -4,6 +4,14 @@ export const StaticRatingComponent = ({ rating }: { rating: number }) => {
   return (
     <>
     <div className='rating rating-md rating-half'>
+        <input
+          type='radio'
+          name='rating-10'
+          value={0}
+          readOnly
+          checked={rating === 0}
+          className='rating-hidden'
+        />
         {[...Array(5).keys()]
           .map((x) => x + 0.5)
           .concat([...Array(5).keys()].map((x) => ++x))

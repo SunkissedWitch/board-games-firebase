@@ -1,5 +1,5 @@
 import { DocumentData } from 'firebase/firestore'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 
 interface ChildrenProp {
   children?: ReactNode
@@ -16,30 +16,65 @@ interface IProductDetails {
   product: DocumentData
   category: string
 }
+type DescriptionProps = {
+  components: string[]
+  publisher: string
+  language: string
+}
 
 export const ProductDetails = ({ product, category }: IProductDetails) => {
-  const { description: { components, publisher, language } } = product
+  const { components, publisher, language }: DescriptionProps =
+    product?.description
+  const [expand, setExpand] = useState<boolean>(false)
 
   return (
     <div className='grid grid-cols-[1fr,_1.75fr] gap-y-5 gap-x-2.5'>
       <Title>Publisher</Title>
-      <div className='px-2.5 leading-normal text-sm font-light'>
-        {publisher}
-      </div>
+      <DetailItem>{publisher}</DetailItem>
 
       <Title>Language</Title>
-      <div className='px-2.5 leading-normal text-sm font-light'>{language}</div>
+      <DetailItem>{language}</DetailItem>
 
       <Title>Main category</Title>
-      <div className='px-2.5 leading-normal text-sm font-light'>{category}</div>
+      <DetailItem>{category}</DetailItem>
 
       <Title>Components</Title>
       <ul className='px-2.5 leading-normal text-sm font-light'>
-        {components?.map((component: string) => (
-          <li className='list-item' key={component}>
-            {component}
-          </li>
-        ))}
+        {components?.length < 5 ? (
+          components?.map((component: string) => (
+            <li key={component}>{component}</li>
+          ))
+        ) : (
+          <>
+            {components.slice(0, 5).map((component: string) => (
+              <li key={component}>{component}</li>
+            ))}
+            {!expand && (
+              <li>
+                <button
+                  className='btn btn-link h-auto min-h-fit p-0'
+                  onClick={() => setExpand(true)}
+                >
+                  more...
+                </button>
+              </li>
+            )}
+            {expand &&
+              components.slice(5).map((component: string) => (
+                <li key={component}>{component}</li>
+              ))}
+            {expand && (
+              <li>
+                <button
+                  className='btn btn-link h-auto min-h-fit p-0'
+                  onClick={() => setExpand(false)}
+                >
+                  ...hide
+                </button>
+              </li>
+            )}
+          </>
+        )}
       </ul>
     </div>
   )
