@@ -12,7 +12,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
   const goToHomePage = () => navigate('/')
   const goToCart = () => navigate('/cart')
   const { currentUser, logout } = useAuth()
-  const { products } = useCart()
+  const { totalItems } = useCart()
   const { pathname } = useLocation()
 
   return (
@@ -46,7 +46,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
             </div>
           )}
           <div className="indicator">
-            <span className="indicator-item badge badge-primary rounded-full">{products?.length}</span> 
+            <span className="indicator-item badge badge-primary rounded-full">{totalItems}</span> 
             <button className="btn btn-square rounded-xl btn-outline btn-sm sm:btn-md" onClick={goToCart}>
               <ShoppingCartIcon className='w-5 h-5 sm:w-7 sm:h-7' />
             </button> 
@@ -54,7 +54,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
           {/* <CartButton /> */}
         </div>
       </div>
-      <main className='flex flex-col'>{<Outlet /> || children}</main>
+      <main className='flex flex-col grow'>{<Outlet /> || children}</main>
     </>
   )
 }

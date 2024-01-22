@@ -1,51 +1,51 @@
-import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline"
-import { DocumentData } from "firebase/firestore"
-import { useState } from "react"
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import { DocumentData } from 'firebase/firestore'
+import { useCart } from '../../contexts/CartContext'
+import { formattedPrice } from '../../utils/helpers'
+import { useNavigate } from 'react-router-dom'
+import { Counter } from './Counter'
 
 interface CartItemProps {
   product: DocumentData
 }
 
 export const CartItem = ({ product }: CartItemProps) => {
-  const [amount, setAmount] = useState<number>(1)
-  const add = () => setAmount((prevState) => prevState + 1)
-  const subtract = () => {
-    if (amount > 1) {
-      return setAmount(amount - 1)
-    }
-  }
+  const { removeFromCart } = useCart()
+  const { category, productId, description: { photo, price }, title, quantity } = product
+  const navigate = useNavigate()
+  const remove = () => removeFromCart(productId)
+  const showProductPage = () => navigate(`/${category}/${productId}`)
+
   return (
-    // <div className='grid grid-flow-row grid-cols-6 gap-4 p-3 border-b-2'>
-    <div className='flex flex-row flex-wrap sm:flex-nowrap justify-between gap-4 p-3 border-b-2 place-items-center'>
-      <div className='flex grow gap-x-2 sm:gap-x-4 place-items-center'>
-        <figure className='shrink-0'>
-          <img src={product.description.photo} alt={product.title} className='h-8 sm:h-16'>
-          </img>
-        </figure>
-        <div className='grow px-2 truncate'>
-          {product.title}
+    <div className='flex flex-row flex-nowrap gap-x-3 p-3 card card-bordered shadow-lg'>
+      <figure className='shrink-0 h-16 w-16 bg-base-300'>
+        <img src={photo} alt={title} className='h-16 place-self-start'></img>
+      </figure>
+      <div className='grow flex flex-row w-full justify-between gap-2.5'>
+        <div className='flex flex-col md:flex-row gap-2.5 grow'>
+          <div
+            className='flex flex-col gap-2 grow group transition-colors cursor-pointer'
+            onClick={showProductPage}
+          >
+            <div className='group-hover:underline group-hover:underline-offset-4 text-lg'>
+              {title}
+            </div>
+            <div className='font-bold'>{formattedPrice(price)}</div>
+          </div>
+          <Counter quantity={quantity} productId={productId} />
+        </div>
+        <div className='flex flex-col justify-between md:flex-row-reverse md:justify-normal gap-5 min-w-[25%]'>
+          <button
+            className='btn btn-square btn-ghost btn-sm self-end md:self-start'
+            onClick={remove}
+          >
+            <XMarkIcon className='w-5 h-5' />
+          </button>
+          <div className='font-medium text-end md:place-self-center'>
+            {formattedPrice(price * quantity)}
+          </div>
         </div>
       </div>
-      <div className='shrink-0 place-center px-2'>
-        {product.description.price} hrn
-      </div>
-      <div className='flex gap-x-2 sm:gap-x-4 place-items-center'>  
-        <div className='flex flex-row gap-x-2 justify-between place-items-center min-w-[7.5rem] shrink-0'>
-        {/* <div className='grid grid-flow-col gap-x-2 justify-between'> */}
-          <button className='btn btn-square btn-sm shrink-0' onClick={subtract}>
-            <MinusIcon className='w-4 h-4 sm:w-5 sm:h-5' />
-          </button>
-          <div className='px-2 grow text-center'>{amount}</div>
-          <button className='btn btn-square btn-sm shrink-0' onClick={add}>
-            <PlusIcon className='w-4 h-4 sm:w-5 sm:h-5' />
-          </button>
-        </div>
-        <div className='shrink-0 place-center sm:ms-4'>
-          <button className='btn btn-square btn-sm'>
-            <TrashIcon className='w-4 h-4 sm:w-5 sm:h-5' />
-          </button>
-        </div>
-      </div>
-    </div> 
+    </div>
   )
 }
