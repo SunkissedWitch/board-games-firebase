@@ -1,28 +1,34 @@
+import { ReactNode } from "react";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
+
+const ErrorBlock = ({ children }: { children: ReactNode }) => {
+  return (
+    <div className='container alert alert-error place-self-center text-center my-5'>
+      {children || "There is nothing here! Go away!"}
+    </div>
+  )
+}
 
 export const RootBoundary = () => {
     const error = useRouteError();
   
     if (isRouteErrorResponse(error)) {
       if (error.status === 404) {
-        return <div>{error?.data?.message || "This page doesn't exist!"}</div>;
+        return <ErrorBlock>{error?.data?.message || "This page doesn't exist!"}</ErrorBlock>;
       }
   
       if (error.status === 401) {
-        return <div>You aren't authorized to see this</div>;
+        return <ErrorBlock>You aren't authorized to see this</ErrorBlock>;
       }
   
       if (error.status === 503) {
-        return <div>Looks like our API is down</div>;
+        return <ErrorBlock>Looks like our API is down</ErrorBlock>;
       }
   
       if (error.status === 418) {
-        return <div>🫖</div>;
+        return <ErrorBlock>&#x1FAD6;</ErrorBlock>;
       }
     }
   
-    return <div>Something went wrong</div>;
-  // return (
-  //   <div className='p-10 rounded flex place-self-center border border-error text-error-content bg-error bg-opacity-40'>There is nothing here! Go away!</div>
-  // )
+    return <ErrorBlock>Something went wrong</ErrorBlock>;
 }
