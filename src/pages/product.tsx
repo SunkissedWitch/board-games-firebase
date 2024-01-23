@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom"
+import { Params, json, useLoaderData } from "react-router-dom"
 import { db } from "../firebase"
 import { DocumentData, doc, getDoc } from "firebase/firestore"
 import { formattedPrice } from "../utils/helpers"
@@ -6,8 +6,14 @@ import { useCart } from "../contexts/CartContext"
 import { StaticRatingComponent } from "../components/RatingComponent/StaticRating"
 import { ProductDetails } from "../components/ProductPage/ProductDetails"
 
-export const getCurrentProduct = async ({ params }: any) => {
+export const getCurrentProduct = async ({ params }: { params: Params }) => {
   const { productId, category } = params
+  if (!productId) {
+    // -- imposible variant --
+    console.log('No productId', productId)
+    return
+  }
+
   const docRef = doc(db, "products", productId);
   const docSnap = await getDoc(docRef);
   console.log('docRef', docRef.id)
@@ -18,9 +24,11 @@ export const getCurrentProduct = async ({ params }: any) => {
   } else {
     // docSnap.data() will be undefined in this case
     console.log("No such document!");
-    return { product: {} , category: category || '', docId: '' }
+    throw json(
+      '',
+      { status: 404 }
+    )
   }
-
 }
 
 interface IProducts { product: DocumentData, category: string, docId: string }
