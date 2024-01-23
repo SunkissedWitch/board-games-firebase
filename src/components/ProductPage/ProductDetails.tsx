@@ -46,10 +46,10 @@ export const ProductDetails = ({ product, category }: IProductDetails) => {
           ))
         ) : (
           <>
-            {components.slice(0, 5).map((component: string) => (
+            {components?.slice(0, 5).map((component: string) => (
               <li key={component}>{component}</li>
             ))}
-            {!expand && (
+            {!expand && components && (
               <li>
                 <button
                   className='btn btn-link h-auto min-h-fit p-0'
@@ -60,7 +60,7 @@ export const ProductDetails = ({ product, category }: IProductDetails) => {
               </li>
             )}
             {expand &&
-              components.slice(5).map((component: string) => (
+              components?.slice(5).map((component: string) => (
                 <li key={component}>{component}</li>
               ))}
             {expand && (
