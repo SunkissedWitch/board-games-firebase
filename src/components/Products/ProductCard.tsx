@@ -13,7 +13,7 @@ export const ProductCard = ({ product }: DocumentData) => {
         <h2 className="card-title">{product?.title}</h2>
         <p>{formattedPrice(price)} грн</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary" onClick={() => navigate(`${product?.category}/${product?.productId}`)}>Buy now!</button>
+          <button className="btn btn-primary" onClick={() => navigate(`/${product?.category}/${product?.productId}`)}>Buy now!</button>
         </div>
       </div>
     </div>
