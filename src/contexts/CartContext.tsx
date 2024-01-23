@@ -54,10 +54,9 @@ export function CartProvider({ children }: PropsWithChildren) {
   const { currentUser } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const orderRef = doc(cartsRef, currentUser?.uid)
 
   async function getCartData() {
-    if (currentUser?.uid) {
+    if (currentUser && currentUser?.uid) {
       const docsRef = doc(cartsRef, currentUser?.uid)
       const docSnap = await getDoc(docsRef)
       if (docSnap.exists()) {
@@ -77,6 +76,7 @@ export function CartProvider({ children }: PropsWithChildren) {
   }
 
   const updateList = async(newValue: CartProductType[] | []) => {
+    const orderRef = doc(cartsRef, currentUser?.uid)
     try {
       await updateDoc(orderRef, {
         orderList: newValue,
@@ -88,7 +88,7 @@ export function CartProvider({ children }: PropsWithChildren) {
   }
 
   useEffect(() => {
-    if (currentUser !== null) getCartData()
+    getCartData()
   }, [currentUser])
 
   function clearCart() {

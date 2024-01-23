@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom"
 import { RootLayout } from "./RootLayout"
-import { Home } from "./pages/home"
+import { rootLoader, Root } from "./pages/home"
 import { ProductPage, getCurrentProduct } from "./pages/product"
 import { Orders } from "./pages/orders"
 import { Login } from "./pages/login"
@@ -9,6 +9,8 @@ import { Cart } from "./pages/cart"
 import { CartProvider } from "./contexts/CartContext"
 import { SuccessPage } from "./pages/cartSuccess"
 import { OrderPage } from "./pages/order"
+import { ProductsList, allProductsLoader, productsListLoader } from "./components/Products"
+import { RootBoundary } from "./pages/errorPage"
 
 export const router = createBrowserRouter([
   {
@@ -24,13 +26,28 @@ export const router = createBrowserRouter([
       },
       {
         path: '/',
-        index: true,
-        element: <Home />
+        loader: rootLoader,
+        id: 'root',
+        element: <Root />,
+        children: [
+          {
+            index: true,
+            loader: allProductsLoader,
+            element: <ProductsList />
+          },
+          {
+            path: ':category',
+            loader: productsListLoader,
+            element: <ProductsList />
+          }
+        ],
+        errorElement: <RootBoundary />
       },
       {
         path: '/:category/:productId',
         loader: getCurrentProduct,
-        element: <ProductPage />
+        element: <ProductPage />,
+        errorElement: <RootBoundary />,
       },
       {
         path: '/orders',
