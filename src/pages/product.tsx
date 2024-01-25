@@ -7,7 +7,8 @@ import { StaticRatingComponent } from '../components/RatingComponent/StaticRatin
 import { ProductDetails } from '../components/ProductPage/ProductDetails'
 import { DescriptionTabs } from '../components/ProductPage/DescriptionTabs'
 import { useEffect, useState } from 'react'
-import { getDownloadURL, ref } from 'firebase/storage'
+import { getDownloadURL, listAll, ref } from 'firebase/storage'
+import { FilesList } from '../components/ProductPage/FilesList'
 
 export const getCurrentProduct = async ({ params }: { params: Params }) => {
   const { productId, category } = params
@@ -45,25 +46,46 @@ export const ProductPage = () => {
     addToCart(docId, product)
   }
   const rating: number = product?.rating || 0
-
-  const tabs = [
-    {
-      title: 'Description',
-      content: product?.description?.mainText
-    },
-    {
-      title: 'Files',
-      content: product?.files
-    },
-    {
-      title: 'Reviews',
-      content: product?.reviews
-    },
-  ]
   // ToDo: try to add image reference to firestore?
   const [image, setImage] = useState<string>('')
-  const imageRef = ref(storage, product?.images[0])
+  const imageRef = product?.images ? ref(storage, product.images[0]) : null
   console.log('imageRef', imageRef)
+  // const [files, setFiles] = useState<string[]>([])
+  // const filesRef = ref(storage, `products/${product.productId}/files/`)
+  
+  // useEffect(() => {
+  //   listAll(filesRef).then((response) => {
+  //     if(response.items.length > 0) {
+  //       const list: string[] = []
+  //       response.items.forEach((item) => {
+  //         // list.push(item.fullPath)
+  //         getDownloadURL(item).then((url) => {
+  //           console.log('file url: ', url)
+  //           list.push(url)
+  //         })
+  //       })
+  //       setFiles(list)
+  //       console.log(response?.items?.[0].fullPath)
+  //     }
+  //   })
+  // }, [])
+  
+    const tabs = [
+      {
+        title: 'Description',
+        content: product?.description?.mainText
+      },
+      {
+        title: 'Files',
+        content: product?.files ? <FilesList files={product?.files} /> : null
+      },
+      {
+        title: 'Reviews',
+        content: product?.reviews
+      },
+    ]
+  // console.log("List files", files)
+
   
   // const imagesRef = ref(storage, `products/${product.productId}/images/`)
 
@@ -83,20 +105,22 @@ export const ProductPage = () => {
   // }, [])
 
   useEffect(() => {
-    getDownloadURL(imageRef).then((url) => {
+    if (imageRef) {
+      getDownloadURL(imageRef).then((url) => {
       console.log('getDownloadURL url', url)
       setImage(url)
-    })
+      }
+    )}
   }, [])
 
   console.log('product', product)
   return (
     <div className='px-5 container mx-auto'>
       <div className='grid grid-cols-1 md:grid-cols-[1fr,_2fr] py-5 gap-x-5 gap-y-10 items-stretch'>
-        <div className='w-96 h-96 place-self-center md:w-full md:h-full md:place-self-start overflow-clip'>
+        <div className='w-96 h-96 place-self-center md:min-w-[320px] md:min-h-[320px] md:w-full md:h-full md:place-self-start overflow-clip'>
           <figure>
             <img
-              src={image || product?.description?.photo[0]}
+              src={image || product?.description?.photo?.[0]}
               alt={product?.title}
             />
           </figure>
