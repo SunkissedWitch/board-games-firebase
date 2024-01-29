@@ -1,14 +1,13 @@
 import { Params, json, useLoaderData } from 'react-router-dom'
-import { db, storage } from '../firebase'
+import { db } from '../firebase'
 import { DocumentData, doc, getDoc } from 'firebase/firestore'
 import { formattedPrice } from '../utils/helpers'
 import { useCart } from '../contexts/CartContext'
 import { StaticRatingComponent } from '../components/RatingComponent/StaticRating'
 import { ProductDetails } from '../components/ProductPage/ProductDetails'
 import { DescriptionTabs } from '../components/ProductPage/DescriptionTabs'
-import { useEffect, useState } from 'react'
-import { getDownloadURL, listAll, ref } from 'firebase/storage'
 import { FilesList } from '../components/ProductPage/FilesList'
+import { Carousel } from '../components/ProductPage/Carousel'
 
 export const getCurrentProduct = async ({ params }: { params: Params }) => {
   const { productId, category } = params
@@ -46,99 +45,55 @@ export const ProductPage = () => {
     addToCart(docId, product)
   }
   const rating: number = product?.rating || 0
-  // ToDo: try to add image reference to firestore?
-  const [image, setImage] = useState<string>('')
-  const imageRef = product?.images ? ref(storage, product.images[0]) : null
-  console.log('imageRef', imageRef)
-  // const [files, setFiles] = useState<string[]>([])
-  // const filesRef = ref(storage, `products/${product.productId}/files/`)
-  
-  // useEffect(() => {
-  //   listAll(filesRef).then((response) => {
-  //     if(response.items.length > 0) {
-  //       const list: string[] = []
-  //       response.items.forEach((item) => {
-  //         // list.push(item.fullPath)
-  //         getDownloadURL(item).then((url) => {
-  //           console.log('file url: ', url)
-  //           list.push(url)
-  //         })
-  //       })
-  //       setFiles(list)
-  //       console.log(response?.items?.[0].fullPath)
-  //     }
-  //   })
-  // }, [])
-  
-    const tabs = [
-      {
-        title: 'Description',
-        content: product?.description?.mainText
-      },
-      {
-        title: 'Files',
-        content: product?.files ? <FilesList files={product?.files} /> : null
-      },
-      {
-        title: 'Reviews',
-        content: product?.reviews
-      },
-    ]
-  // console.log("List files", files)
+  const imagesList: string[] = product?.images || []
 
-  
-  // const imagesRef = ref(storage, `products/${product.productId}/images/`)
+  const tabs = [
+    {
+      title: 'Description',
+      content: product?.description?.mainText
+    },
+    {
+      title: 'Files',
+      content: product?.files ? <FilesList files={product?.files} /> : null
+    },
+    {
+      title: 'Reviews',
+      content: product?.reviews
+    }
+  ]
 
-  // fullPath: products/kJWnxUrWdEZLpA0d74fq/images/zhakh-arkgema.-tretya-redaktsiya-arkham-horror-third-edition-18334994439337.webp
-
-  // toString(): gs://test-e-commerce-portal.appspot.com/products/kJWnxUrWdEZLpA0d74fq/images/zhakh-arkgema.-tretya-redaktsiya-arkham-horror-third-edition-18334994439337.webp
-
-  // useEffect(() => {
-  //   listAll(imagesRef).then((response) => {
-  //     if(response.items.length > 0) {
-  //       console.log(response.items[0].bucket)
-  //       getDownloadURL(response.items[0]).then((url) => {
-  //         console.log('url', url)
-  //         setImage(url)
-  //       })}
-  //     })
-  // }, [])
-
-  useEffect(() => {
-    if (imageRef) {
-      getDownloadURL(imageRef).then((url) => {
-      console.log('getDownloadURL url', url)
-      setImage(url)
-      }
-    )}
-  }, [])
-
-  console.log('product', product)
   return (
     <div className='px-5 container mx-auto'>
-      <div className='grid grid-cols-1 md:grid-cols-[1fr,_2fr] py-5 gap-x-5 gap-y-10 items-stretch'>
-        <div className='w-96 h-96 place-self-center md:min-w-[320px] md:min-h-[320px] md:w-full md:h-full md:place-self-start overflow-clip'>
-          <figure>
-            <img
-              src={image || product?.description?.photo?.[0]}
-              alt={product?.title}
-            />
-          </figure>
-        </div>
-        <div className='flex flex-col gap-y-5'>
-          <h1 className='text-3xl font-semibold text-center'>
+      <div className='grid grid-cols-1 md:grid-cols-[1fr,_2fr] py-5 gap-x-5 gap-y-10 items-stretch order-first'>
+        <div className='md:hidden flex flex-col gap-y-5 text-center'>
+          <h1 className='text-3xl font-semibold'>
             {product?.title}
           </h1>
           <p className='text-lg font-medium text-base-content text-opacity-50'>
             {product?.description?.subtitle}
           </p>
-          <div className='text-3xl font-semibold'>
-            {formattedPrice(product?.description?.price)}
+        </div>
+        <div className='w-96 place-self-center md:min-w-[320px] md:min-h-[320px] md:w-full md:h-full md:place-self-start overflow-clip'>
+          <Carousel images={imagesList} />
+        </div>
+        <div className='flex flex-col gap-y-5'>
+          <div className='hidden md:flex flex-col gap-y-5 text-center'>
+            <h1 className='text-3xl font-semibold'>
+              {product?.title}
+            </h1>
+            <p className='text-lg font-medium text-base-content text-opacity-50'>
+              {product?.description?.subtitle}
+            </p>
           </div>
-          <div className='-ms-2'>
-            <StaticRatingComponent rating={rating} />
+          <div className='flex flex-col gap-y-2.5 grow'>
+            <div className='text-3xl font-semibold'>
+              {formattedPrice(product?.description?.price)}
+            </div>
+            <div className='-ms-2'>
+              <StaticRatingComponent rating={rating} />
+            </div>
           </div>
-          <div className='grid grid-cols-2 gap-5 max-w-xs mt-auto'>
+          <div className='grid grid-cols-2 gap-5 max-w-xs'>
             <button className='btn btn-outline' onClick={addToCartHelper}>
               Add to cart
             </button>
