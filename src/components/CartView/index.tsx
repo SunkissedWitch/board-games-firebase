@@ -6,9 +6,9 @@ import { forEach, get } from "lodash"
 import { useState } from "react"
 import { AddressForm, AddressInputsProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
-import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
+import { useAuthStore } from "../../contexts/AuthStore"
 
 interface CartViewProps {
   products: DocumentData[]
@@ -16,7 +16,7 @@ interface CartViewProps {
 
 export const CartView = ({ products }: CartViewProps) => {
   const { clearCart, totalItems, products: cartState } = useCart()
-  const { currentUser } = useAuth()
+  const { currentUser } = useAuthStore()
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<AddressInputsProps | null>(null)
   const navigate = useNavigate()

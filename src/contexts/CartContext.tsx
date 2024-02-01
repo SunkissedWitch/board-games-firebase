@@ -1,10 +1,10 @@
 import { DocumentData, DocumentReference, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
-import { useAuth } from './AuthContext'
 import { cartsRef, productsRef } from '../utils/collectionRefferences'
 import { db } from '../firebase'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { head, get, pick, sum } from 'lodash'
+import { useAuthStore } from './AuthStore'
 
 export type CartProductType = {
   productId: string
@@ -51,7 +51,7 @@ export function CartProvider({ children }: PropsWithChildren) {
   const [products, setProducts] = useState<CartProductType[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [totalItems, setTotalItems] = useState<number>(0)
-  const { currentUser } = useAuth()
+  const { currentUser } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
 
