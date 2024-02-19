@@ -2,12 +2,13 @@ import { Params, json, useLoaderData } from 'react-router-dom'
 import { db } from '../firebase'
 import { DocumentData, doc, getDoc } from 'firebase/firestore'
 import { formattedPrice } from '../utils/helpers'
-import { useCart } from '../contexts/CartContext'
+// import { useCart } from '../contexts/CartContext'
 import { StaticRatingComponent } from '../components/RatingComponent/StaticRating'
 import { ProductDetails } from '../components/ProductPage/ProductDetails'
 import { DescriptionTabs } from '../components/ProductPage/DescriptionTabs'
 import { FilesList } from '../components/ProductPage/FilesList'
 import { Carousel } from '../components/ProductPage/Carousel'
+import { useCartStore } from '../contexts/CartStore'
 
 export const getCurrentProduct = async ({ params }: { params: Params }) => {
   const { productId, category } = params
@@ -39,7 +40,8 @@ interface IProducts {
 
 export const ProductPage = () => {
   const { product, category, docId } = useLoaderData() as IProducts
-  const { addToCart } = useCart()
+  // const { addToCart } = useCart()
+  const { addToCart } = useCartStore()
   const addToCartHelper = () => {
     console.log(docId)
     addToCart(docId, product)

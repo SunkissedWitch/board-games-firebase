@@ -1,7 +1,6 @@
 import { DocumentData, addDoc, serverTimestamp } from "firebase/firestore"
 import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
-import { useCart } from "../../contexts/CartContext"
 import { forEach, get } from "lodash"
 import { useState } from "react"
 import { AddressForm, AddressInputsProps } from "./AddressForm"
@@ -9,13 +8,14 @@ import { ordersRef } from "../../utils/collectionRefferences"
 import { useNavigate } from "react-router-dom"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
 import { useAuthStore } from "../../contexts/AuthStore"
+import { useCartStore } from "../../contexts/CartStore"
 
 interface CartViewProps {
   products: DocumentData[]
 }
 
 export const CartView = ({ products }: CartViewProps) => {
-  const { clearCart, totalItems, products: cartState } = useCart()
+  const { clearCart, totalItems, products: cartState } = useCartStore()
   const { currentUser } = useAuthStore()
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<AddressInputsProps | null>(null)
