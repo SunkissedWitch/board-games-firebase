@@ -12,10 +12,11 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
   const goToSignUpPage = () => navigate('/signup')
   const goToHomePage = () => navigate('/')
   const goToCart = () => navigate('/cart')
-  const { currentUser, logout } = useAuthStore()
-  const { totalItems } = useCartStore()
+  const currentUser = useAuthStore((store) => store.currentUser)
+  const logout = useAuthStore((store) => store.logout)
+  const totalItems = useCartStore((store) => store.totalItems)
   const { pathname } = useLocation()
-  console.log('currentUser', currentUser)
+  console.log('currentUser', currentUser?.uid, totalItems)
 
   return (
     <>
