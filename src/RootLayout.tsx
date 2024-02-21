@@ -1,8 +1,9 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from './contexts/AuthContext'
-import { useCart } from './contexts/CartContext'
 import { ShoppingCartIcon } from '@heroicons/react/24/outline'
+import { useAuthStore } from './contexts/AuthStore'
+import { useCartStore } from './contexts/CartStore'
+import { getCartData } from './firebaseApi/CartApi'
 
 export const RootLayout = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate()
@@ -11,9 +12,14 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
   const goToSignUpPage = () => navigate('/signup')
   const goToHomePage = () => navigate('/')
   const goToCart = () => navigate('/cart')
-  const { currentUser, logout } = useAuth()
-  const { totalItems } = useCart()
+  const currentUser = useAuthStore((store) => store.currentUser)
+  const logout = useAuthStore((store) => store.logout)
+  const totalItems = useCartStore((store) => store.totalItems)
   const { pathname } = useLocation()
+
+  useEffect(() => {
+    getCartData()
+  }, [currentUser?.uid])
 
   return (
     <>

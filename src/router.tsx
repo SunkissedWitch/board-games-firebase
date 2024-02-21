@@ -6,7 +6,6 @@ import { Orders } from "./pages/orders"
 import { Login } from "./pages/login"
 import { Signup } from "./pages/signup"
 import { Cart } from "./pages/cart"
-import { CartProvider } from "./contexts/CartContext"
 import { SuccessPage } from "./pages/cartSuccess"
 import { OrderPage } from "./pages/order"
 import { ProductsList, allProductsLoader, productsListLoader } from "./components/Products"
@@ -14,7 +13,7 @@ import { RootBoundary } from "./pages/errorPage"
 
 export const router = createBrowserRouter([
   {
-    element: <CartProvider><RootLayout /></CartProvider>,
+    element: <RootLayout />,
     children: [
       {
         path: '/login',

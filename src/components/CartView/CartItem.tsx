@@ -1,16 +1,16 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { DocumentData } from 'firebase/firestore'
-import { useCart } from '../../contexts/CartContext'
 import { formattedPrice } from '../../utils/helpers'
 import { useNavigate } from 'react-router-dom'
 import { Counter } from './Counter'
+import { useCartStore } from '../../contexts/CartStore'
 
 interface CartItemProps {
   product: DocumentData
 }
 
 export const CartItem = ({ product }: CartItemProps) => {
-  const { removeFromCart } = useCart()
+  const removeFromCart = useCartStore((state) => state.removeFromCart)
   const { category, productId, description: { photo, price }, title, quantity } = product
   const navigate = useNavigate()
   const remove = () => removeFromCart(productId)

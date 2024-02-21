@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { getDocs, query, where, DocumentData } from 'firebase/firestore'
 import { ordersRef } from '../utils/collectionRefferences'
-import { useAuth } from '../contexts/AuthContext'
 import { OrderCard } from '../components/Orders/Order'
+import { useAuthStore } from '../contexts/AuthStore'
 
 export const Orders = () => {
   const [orders, setOrders] = useState<DocumentData[]>([])
-  const { currentUser } = useAuth()
+  const { currentUser } = useAuthStore()
 
   const getOrders = async () => {
     try {

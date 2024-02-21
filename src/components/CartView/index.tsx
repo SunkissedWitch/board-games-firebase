@@ -1,22 +1,25 @@
 import { DocumentData, addDoc, serverTimestamp } from "firebase/firestore"
 import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
-import { useCart } from "../../contexts/CartContext"
 import { forEach, get } from "lodash"
 import { useState } from "react"
 import { AddressForm, AddressInputsProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
-import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
+import { useAuthStore } from "../../contexts/AuthStore"
+import { useCartStore } from "../../contexts/CartStore"
 
 interface CartViewProps {
   products: DocumentData[]
 }
 
 export const CartView = ({ products }: CartViewProps) => {
-  const { clearCart, totalItems, products: cartState } = useCart()
-  const { currentUser } = useAuth()
+  const currentUser = useAuthStore((state) => state.currentUser)
+  const totalItems = useCartStore((state) => state.totalItems)
+  const cartState = useCartStore((state) => state.products)
+  const clearCart = useCartStore((state) => state.clearCart)
+
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<AddressInputsProps | null>(null)
   const navigate = useNavigate()

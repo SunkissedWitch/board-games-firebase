@@ -10,13 +10,13 @@ import { IOrderSummary, OrderSummary } from '../components/OrderPage/OrderSummar
 import { getTotalItemPrice, getTotalPrice } from '../utils/helpers'
 import { forEach, get, sum } from 'lodash'
 import { ContactInfo } from '../components/OrderPage/ContactInfo'
-import { useAuth } from '../contexts/AuthContext'
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
+import { useAuthStore } from '../contexts/AuthStore'
 
 export const OrderPage = () => {
   const { orderId } = useParams()
   const [order, setOrder] = useState<IOrder>()
-  const { currentUser } = useAuth()
+  const { currentUser } = useAuthStore()
 
   const getOrder = async () => {
     try {

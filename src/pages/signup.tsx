@@ -2,11 +2,12 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthErrorCodes } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { PasswordInput } from '../components/PasswordInput'
 import { TextInput } from '../components/TextInput'
 import { emailRule } from '../utils/formRules'
+import { useAuthStore } from '../contexts/AuthStore'
+import { auth } from '../firebase'
 
 type Inputs = {
   email: string
@@ -33,11 +34,16 @@ export const Signup = () => {
   })
   const password = useRef({})
   password.current = watch('password', '')
-  const { signup } = useAuth()
+
+  const { signup, setUser } = useAuthStore()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
       await signup({ email, password })
+      setUser(auth.currentUser)
+      navigate(location?.state ? location.state : '/')
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code
