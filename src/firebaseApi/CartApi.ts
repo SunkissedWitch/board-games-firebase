@@ -22,8 +22,6 @@ export interface IMinProductData {
 }
 
 export type NewProductToUserCartProps = {
-  // uid: string,
-  // products: CartProductType[],
   productId: string,
   productData: DocumentData
 }

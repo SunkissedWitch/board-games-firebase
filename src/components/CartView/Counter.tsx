@@ -1,5 +1,5 @@
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
-import { useCart } from '../../contexts/CartContext'
+import { useCartStore } from '../../contexts/CartStore'
 
 interface CounterProps {
   quantity: number
@@ -7,7 +7,7 @@ interface CounterProps {
 }
 
 export const Counter = ({ quantity, productId }: CounterProps) => {
-  const { changeProductQuantity } = useCart()
+  const changeProductQuantity = useCartStore((state) => state.changeProductQuantity)
   const add = () => changeProductQuantity(productId, quantity + 1)
 
   const subtract = () => {

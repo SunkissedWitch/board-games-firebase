@@ -8,9 +8,7 @@ import { useCartStore } from '../contexts/CartStore'
 
 export const Cart = () => {
   const [products, setProducts] = useState<DocumentData[]>([])
-  console.log('Cart [products]', products)
-  const { products: cartProductsList } = useCartStore()
-
+  const cartProductsList = useCartStore((state) => state.products)
 
   const getProducts = async (orderList: CartProductType[]) => {
     if (orderList?.length > 0) {

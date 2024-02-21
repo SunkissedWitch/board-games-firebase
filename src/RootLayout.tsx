@@ -1,6 +1,5 @@
 import { PropsWithChildren, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-// import { useCart } from './contexts/CartContext'
 import { ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { useAuthStore } from './contexts/AuthStore'
 import { useCartStore } from './contexts/CartStore'
@@ -17,7 +16,6 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
   const logout = useAuthStore((store) => store.logout)
   const totalItems = useCartStore((store) => store.totalItems)
   const { pathname } = useLocation()
-  console.log('currentUser', currentUser?.uid, totalItems)
 
   useEffect(() => {
     getCartData()

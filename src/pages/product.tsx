@@ -2,7 +2,6 @@ import { Params, json, useLoaderData } from 'react-router-dom'
 import { db } from '../firebase'
 import { DocumentData, doc, getDoc } from 'firebase/firestore'
 import { formattedPrice } from '../utils/helpers'
-// import { useCart } from '../contexts/CartContext'
 import { StaticRatingComponent } from '../components/RatingComponent/StaticRating'
 import { ProductDetails } from '../components/ProductPage/ProductDetails'
 import { DescriptionTabs } from '../components/ProductPage/DescriptionTabs'
@@ -40,10 +39,8 @@ interface IProducts {
 
 export const ProductPage = () => {
   const { product, category, docId } = useLoaderData() as IProducts
-  // const { addToCart } = useCart()
-  const { addToCart } = useCartStore()
+  const addToCart = useCartStore((state) => state.addToCart)
   const addToCartHelper = () => {
-    console.log(docId)
     addToCart(docId, product)
   }
   const rating: number = product?.rating || 0

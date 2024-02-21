@@ -1,6 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { DocumentData } from 'firebase/firestore'
-// import { useCart } from '../../contexts/CartContext'
 import { formattedPrice } from '../../utils/helpers'
 import { useNavigate } from 'react-router-dom'
 import { Counter } from './Counter'

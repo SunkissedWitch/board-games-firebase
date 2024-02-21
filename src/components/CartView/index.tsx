@@ -15,8 +15,11 @@ interface CartViewProps {
 }
 
 export const CartView = ({ products }: CartViewProps) => {
-  const { clearCart, totalItems, products: cartState } = useCartStore()
-  const { currentUser } = useAuthStore()
+  const currentUser = useAuthStore((state) => state.currentUser)
+  const totalItems = useCartStore((state) => state.totalItems)
+  const cartState = useCartStore((state) => state.products)
+  const clearCart = useCartStore((state) => state.clearCart)
+
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<AddressInputsProps | null>(null)
   const navigate = useNavigate()
