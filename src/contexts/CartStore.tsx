@@ -11,10 +11,6 @@ interface CartStore {
   addToCart: (productId: string, productData: DocumentData) => void
   removeFromCart: (productId: string) => void
   changeProductQuantity: (productId: string, quantity: number) => void
-  // incrementProductQty: (productId: string) => void
-  // decrementProductQty: (productId: string) => void
-  // updateList: (props: CartProductType[]) => void
-  // getProductQuantity: (productId: string) => number
 }
 
 export const cartInitialState = {
@@ -44,14 +40,6 @@ export const useCartStore = create<CartStore>()(
       const newList = products.filter(({ productId: id }) => id !== productId)
       updateList(newList)
     },
-    changeProductQuantity,
-    // incrementProductQty: (productId: string) => {
-    //   const newValue = Number(get().products.find((item) => item.productId === productId)?.quantity) + 1
-    //   changeProductQuantity(productId, newValue)
-    // },
-    // decrementProductQty: (productId: string) => {
-    //   const currentValue = get().products.find((item) => item.productId === productId)?.quantity || 0
-    //   if (currentValue > 1) changeProductQuantity(productId, currentValue - 1)
-    // }
+    changeProductQuantity
   })
 )
