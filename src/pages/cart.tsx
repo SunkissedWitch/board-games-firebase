@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getDocs, query, where, DocumentData, documentId } from 'firebase/firestore'
 import { productsRef } from '../utils/collectionRefferences'
-import { CartProductType } from '../contexts/CartContext'
 import { CartView } from '../components/CartView'
 import _ from 'lodash'
 import { useCartStore } from '../contexts/CartStore'
+import { CartProductType } from '../firebaseApi/CartApi'
 
 export const Cart = () => {
   const [products, setProducts] = useState<DocumentData[]>([])
