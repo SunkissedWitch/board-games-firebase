@@ -1,9 +1,16 @@
-import { DocumentData, DocumentReference, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { cartsRef, productsRef } from "../utils/collectionRefferences";
-import { sum, pick, get, head } from "lodash";
-import { db } from "../firebase";
-import { useCartStore } from "../contexts/CartStore";
-import { useAuthStore } from "../contexts/AuthStore";
+import {
+  DocumentData,
+  DocumentReference,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore'
+import { cartsRef, productsRef } from '../utils/collectionRefferences'
+import { sum, pick, get, head } from 'lodash'
+import { db } from '../firebase'
+import { useCartStore } from '../contexts/CartStore'
+import { useAuthStore } from '../contexts/AuthStore'
 
 // -- types and interfaces --
 export type CartProductType = {
@@ -22,7 +29,7 @@ export interface IMinProductData {
 }
 
 export type NewProductToUserCartProps = {
-  productId: string,
+  productId: string
   productData: DocumentData
 }
 
@@ -30,15 +37,16 @@ export type NewProductToUserCartProps = {
 export const sumItems = (arrayCollection: CartProductType[]) => {
   const pricesArray: number[] = arrayCollection.map(
     (element: CartProductType) => element.quantity
-  );
-  return sum(pricesArray);
-};
+  )
+  return sum(pricesArray)
+}
 
-export const minProductData = (productData: DocumentData) => ({
-  ...pick(productData, ['title', 'productId', 'category']),
-  price: get(productData, ['description', 'price'], 0),
-  photo: head(get(productData,  ['description', 'photo'], []))
-}) as IMinProductData
+export const minProductData = (productData: DocumentData) =>
+  ({
+    ...pick(productData, ['title', 'productId', 'category']),
+    price: get(productData, ['description', 'price'], 0),
+    photo: head(get(productData, ['description', 'photo'], [])),
+  } as IMinProductData)
 
 // -- api calls --
 export async function getCartData() {
@@ -54,7 +62,7 @@ export async function getCartData() {
       const orderList: CartProductType[] = docSnap.get('orderList')
       updateTotalItems(sumItems(orderList))
       updateProducts(orderList)
-      return;
+      return
     } else {
       // docSnap.data() will be undefined in this case
       console.log('No such document!')
@@ -65,47 +73,51 @@ export async function getCartData() {
   updateProducts([])
 }
 
-export const addNewProductToUserCart = async ({ productId, productData }: NewProductToUserCartProps) => {
-  const { products, totalItems, updateProducts, updateTotalItems } = useCartStore.getState()
+export const addNewProductToUserCart = async ({
+  productId,
+  productData,
+}: NewProductToUserCartProps) => {
+  const { products, totalItems, updateProducts, updateTotalItems } =
+    useCartStore.getState()
   const currentUser = useAuthStore.getState().currentUser
 
   if (currentUser && currentUser.uid) {
-  const docData = {
-    orderList: [
-      ...products,
-      {
-        productId,
-        productReference: doc(productsRef, productId),
-        productData: minProductData(productData),
-        quantity: 1,
-      },
-    ],
-  };
-  try {
-    await setDoc(doc(db, "carts", currentUser.uid), docData);
-    updateProducts(docData.orderList)
-    updateTotalItems(totalItems + 1)
-  } catch (error) {
-    console.log("error [setDoc][addToCart]", error);
-    return false
-  }}
+    const docData = {
+      orderList: [
+        ...products,
+        {
+          productId,
+          productReference: doc(productsRef, productId),
+          productData: minProductData(productData),
+          quantity: 1,
+        },
+      ],
+    }
+    try {
+      await setDoc(doc(db, 'carts', currentUser.uid), docData)
+      updateProducts(docData.orderList)
+      updateTotalItems(totalItems + 1)
+    } catch (error) {
+      console.log('error [setDoc][addToCart]', error)
+      return false
+    }
+  }
 }
 
 export const updateList = async (newValue: CartProductType[] | []) => {
   const currentUser = useAuthStore.getState().currentUser
   if (currentUser && currentUser.uid) {
-    const orderRef = doc(cartsRef, currentUser.uid);
+    const orderRef = doc(cartsRef, currentUser.uid)
     try {
       await updateDoc(orderRef, {
         orderList: newValue,
-      });
+      })
       getCartData()
     } catch (error) {
-      console.log("updateList [error]", error);
+      console.log('updateList [error]', error)
     }
   }
-};
-
+}
 
 export const changeProductQuantity = async (
   productId: string,
@@ -117,9 +129,9 @@ export const changeProductQuantity = async (
       return {
         ...product,
         quantity: quantity,
-      };
+      }
     }
-    return product;
-  });
-  return await updateList(newValue);
-};
+    return product
+  })
+  return await updateList(newValue)
+}
