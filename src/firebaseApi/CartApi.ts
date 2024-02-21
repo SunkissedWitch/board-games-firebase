@@ -43,18 +43,6 @@ export const minProductData = (productData: DocumentData) => ({
 }) as IMinProductData
 
 // -- api calls --
-export const getUserCartData = async (uid: string) => {
-  const docSnap = await getDoc(doc(cartsRef, uid));
-  if (docSnap.exists()) {
-    const orderList: CartProductType[] = docSnap.get("orderList");
-    return { products: orderList, totalItems: sumItems(orderList) };
-  } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
-    return;
-  }
-}
-
 export async function getCartData() {
   const { updateProducts, updateTotalItems } = useCartStore.getState()
   const currentUser = useAuthStore.getState().currentUser
@@ -68,11 +56,15 @@ export async function getCartData() {
       const orderList: CartProductType[] = docSnap.get('orderList')
       updateTotalItems(sumItems(orderList))
       updateProducts(orderList)
+      return;
     } else {
       // docSnap.data() will be undefined in this case
       console.log('No such document!')
     }
   }
+
+  updateTotalItems(0)
+  updateProducts([])
 }
 
 export const addNewProductToUserCart = async ({ productId, productData }: NewProductToUserCartProps) => {
@@ -121,7 +113,7 @@ export const changeProductQuantity = async (
   productId: string,
   quantity: number
 ) => {
-  const products = useCartStore((state) => state.products)
+  const products = useCartStore.getState().products
   const newValue = products.map((product) => {
     if (product?.productId === productId) {
       return {
