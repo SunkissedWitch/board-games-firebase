@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import { ShoppingCartIcon } from '@heroicons/react/24/outline'
 import { useAuthStore } from './contexts/AuthStore'
 import { useCartStore } from './contexts/CartStore'
@@ -28,7 +28,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
           <button className='btn btn-square btn-ghost btn-lg' onClick={goToHomePage}>Logo</button>
           {currentUser?.email && (
             <div className='flex flex-row justify-end items-center gap-2.5 px-2 grow'>
-              <div className='max-w-[3rem] sm:max-w-full truncate'>{currentUser?.displayName || currentUser?.email}</div>
+              <Link to='/account' className='max-w-[3rem] sm:max-w-full truncate'>{currentUser?.displayName || currentUser?.email}</Link>
               <button className='btn btn-outline btn-primary btn-sm sm:btn-md' onClick={logout}>
                 Log Out
               </button>
