@@ -1,5 +1,5 @@
 import { Link, createBrowserRouter } from 'react-router-dom'
-import { RootLayout } from './RootLayout'
+import { RootLayout } from './utils/RootLayout'
 import { rootLoader, Root } from './pages/home'
 import { ProductPage, getCurrentProduct } from './pages/product'
 import { Orders } from './pages/orders'
@@ -13,6 +13,7 @@ import { RootBoundary } from './pages/errorPage'
 import { PrivateRoutes } from './utils/PrivateRoutes'
 import { DynamicNameCrumb } from './components/Breadcrumbs/DynamicNameCrumb'
 import { BreadcrumbsLayout } from './components/Breadcrumbs/BreadCrumbsLayout'
+import { AccountPage } from './pages/account'
 
 export const router = createBrowserRouter([
   {
@@ -62,7 +63,7 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: 'account',
-                element: <div>Main account page</div>,
+                element: <AccountPage />,
               },
               {
                 path: 'account/settings',
