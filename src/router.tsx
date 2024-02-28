@@ -14,6 +14,7 @@ import { PrivateRoutes } from './utils/PrivateRoutes'
 import { DynamicNameCrumb } from './components/Breadcrumbs/DynamicNameCrumb'
 import { BreadcrumbsLayout } from './components/Breadcrumbs/BreadCrumbsLayout'
 import { AccountPage } from './pages/account'
+import { AccountSettings } from './pages/accountSettings'
 
 export const router = createBrowserRouter([
   {
@@ -67,7 +68,7 @@ export const router = createBrowserRouter([
               },
               {
                 path: 'account/settings',
-                element: <div>Settings</div>,
+                element: <AccountSettings />,
                 handle: { crumb: () => <Link to='/account/settings'>Settings</Link> }
               },
             ]

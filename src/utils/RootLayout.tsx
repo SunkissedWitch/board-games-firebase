@@ -7,18 +7,21 @@ import { CartButton } from '../components/NavbarComponents/CartButton'
 import { SignUpButton } from '../components/NavbarComponents/SignUpButton'
 import { LoginButton } from '../components/NavbarComponents/LoginButton'
 import { UserMenu } from '../components/NavbarComponents/UserMenu'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '../firebase'
 
 export const RootLayout = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate()
 
   const goToHomePage = () => navigate('/')
   const currentUser = useAuthStore((store) => store.currentUser)
+  const uid = useAuthStore((store) => store.currentUser?.uid)
   const totalItems = useCartStore((store) => store.totalItems)
   const { pathname } = useLocation()
 
   useEffect(() => {
     getCartData()
-  }, [currentUser?.uid])
+  }, [uid])
 
   return (
     <>
