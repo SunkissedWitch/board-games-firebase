@@ -18,7 +18,7 @@ export const AccountPage = () => {
       <div className="card md:card-side bg-base-100 shadow-xl card-compact md:card-normal">
         <div className="avatar placeholder border-b md:border-none">
           {photoURL
-          ? <figure className="md:w-64 mx-auto max-h-64"><img src={photoURL} alt="user_avatar"/></figure>
+          ? <figure className="md:w-64 md:aspect-square mx-auto max-h-64"><img src={photoURL} alt="user_avatar"/></figure>
           : <div className="bg-neutral text-neutral-content max-h-64 w-full md:w-64 mx-auto">
               <span className="text-3xl">{profileName[0].toUpperCase()}</span>
             </div>
@@ -26,7 +26,7 @@ export const AccountPage = () => {
         </div>
         <div className="card-body">
           <h2 className="card-title">Hello, <b>{displayName || email}</b></h2>
-          <div className="grid grid-cols-[1fr,_2fr] gap-x-5 gap-y-2.5 pt-5">
+          <div className="grid grid-cols-[1fr,_2fr] gap-x-5 gap-y-2.5 pt-5 mb-2.5">
             <p>Email</p>
             <p>{email}</p>
             <p>Display Name</p>
