@@ -16,13 +16,13 @@ export const UserMenu = () => {
   return (
     <div className='flex-none'>
       <div className="dropdown dropdown-end">
-        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder btn-sm sm:btn-md">
+        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle border-none avatar">
           { photoURL
-          ? <div className="w-12 rounded-full">
+          ? <div className="rounded-full">
               <img alt={profileName} src={photoURL} />
             </div>
           : 
-            <div className="bg-neutral text-neutral-content rounded-full w-12">
+            <div className="placeholder bg-neutral text-neutral-content rounded-full w-12">
               <span className="text-lg sm:text-2xl">{profileName[0].toUpperCase()}</span>
             </div>
           }

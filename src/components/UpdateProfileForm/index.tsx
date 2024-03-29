@@ -41,9 +41,9 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='grid grid-flow-row gap-5 py-2.5'>
+    <form onSubmit={handleSubmit(onSubmit)} className='max-w-5xl place-self-center w-full grid grid-flow-row grid-cols-2 gap-5 gap-x-10 py-2.5'>
 
-      <label className="form-control w-full max-w-xs">
+      <label className="form-control w-full col-span-2 sm:col-span-1">
         <span className="label label-text">Display Name</span>
         <input
           {...register('displayName')}
@@ -54,7 +54,13 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
         {errors?.displayName && <div className="label label-text-alt text-error">{errors?.displayName.message}</div>}
       </label>
 
-      <label className="form-control w-full max-w-xs">
+      <div className='flex row-span-2 justify-center md:justify-end items-stretch avatar'>
+        <div className="border border-primary avatar placeholder">
+          <div>Image</div>
+        </div>
+      </div>
+
+      <label className="form-control w-full col-span-2 sm:col-span-1">
         <div className="label label-text">Pick a file</div>
         <input
           {...register('photoFile')}
@@ -64,7 +70,8 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
         />
       </label>
 
-      <button type='submit' className='btn btn-primary btn-wide justify-self-end'>
+
+      <button type='submit' className='btn btn-primary btn-wide justify-self-end col-span-2'>
         Confirm
       </button>
     </form>

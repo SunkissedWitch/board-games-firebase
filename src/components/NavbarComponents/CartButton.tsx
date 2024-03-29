@@ -8,8 +8,8 @@ export const CartButton = ({ totalItems }: { totalItems?: number }) => {
   return (
     <div className="indicator">
       <span className="indicator-item badge badge-primary rounded-full top-1 right-1">{totalItems || 0}</span> 
-      <button className="btn btn-square rounded-xl btn-outline btn-sm sm:btn-md" onClick={goToCart}>
-        <ShoppingCartIcon className='w-5 h-5 sm:w-7 sm:h-7' />
+      <button className="btn btn-square rounded-xl btn-outline" onClick={goToCart}>
+        <ShoppingCartIcon className='w-6 h-6 sm:w-7 sm:h-7' />
       </button> 
     </div>
   )
