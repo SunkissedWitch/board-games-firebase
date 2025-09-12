@@ -8,6 +8,7 @@ const ordersRef = collection(db, 'orders')
 const cartsRef = collection(db, 'carts')
 const usersRef = collection(db, 'users')
 const storageProductsRef = ref(storage, 'products/')
+const storageUserFilesRef = ref(storage, `user_files/`)
 
 export {
   categoriesRef,
@@ -15,5 +16,6 @@ export {
   ordersRef,
   cartsRef,
   usersRef,
-  storageProductsRef
+  storageProductsRef,
+  storageUserFilesRef
 }

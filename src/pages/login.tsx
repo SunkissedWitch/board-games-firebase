@@ -37,7 +37,7 @@ export const Login = () => {
     try {
       await login({ email, password })
       setUser(auth.currentUser)
-      navigate(location?.state ? location.state : '/')
+      navigate(location?.state?.from ? location.state.from : '/')
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code
@@ -93,7 +93,7 @@ export const Login = () => {
           </form>
           <div className='card-body mb-5'>
             <div className='text-center'>
-              Have no account? Create it <Link to='/signup' className='link link-primary'>here</Link>
+              Have no account? Create it <Link to='/signup' className='link link-primary' state={{ from: location?.state?.from || '/' }}>here</Link>
             </div>
           </div>
         </div>

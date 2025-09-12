@@ -2,7 +2,6 @@ import { POST_SERVICES } from "../../utils/constants"
 import { DeliveryDataProps } from "../Orders/Order"
 
 export const DeliveryInfo = ({ data }: { data: DeliveryDataProps }) => {
-  console.log('DeliveryInfo [data]', data)
   const { address, city, courierServise, postOffice, postCode, username, tel } = data
 
   return (

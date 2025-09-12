@@ -38,12 +38,13 @@ export const Signup = () => {
   const { signup, setUser } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
+  console.log('location?.state?.from', location?.state?.from)
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
       await signup({ email, password })
       setUser(auth.currentUser)
-      navigate(location?.state ? location.state : '/')
+      navigate(location?.state?.from ? location.state.from : '/')
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code
