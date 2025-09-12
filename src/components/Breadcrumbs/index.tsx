@@ -1,4 +1,4 @@
-import { Params, useMatches } from 'react-router'
+import { type Params, useMatches } from 'react-router'
 
 interface IMatches {
   id: string

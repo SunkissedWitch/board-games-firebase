@@ -1,6 +1,6 @@
-import { DocumentData } from 'firebase/firestore'
+import type { DocumentData } from 'firebase/firestore'
 import { create } from 'zustand'
-import { CartProductType, addNewProductToUserCart, changeProductQuantity, updateList } from '../firebaseApi/CartApi'
+import { type CartProductType, addNewProductToUserCart, changeProductQuantity, updateList } from '../firebaseApi/CartApi'
 
 interface CartStore {
   products: CartProductType[]

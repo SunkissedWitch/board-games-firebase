@@ -1,9 +1,9 @@
-import { DocumentData, addDoc, serverTimestamp } from "firebase/firestore"
+import { type DocumentData, addDoc, serverTimestamp } from "firebase/firestore"
 import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
 import { forEach, get } from "lodash"
 import { useState } from "react"
-import { AddressForm, AddressInputsProps } from "./AddressForm"
+import { AddressForm, type AddressInputsProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
 import { useNavigate } from "react-router"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'

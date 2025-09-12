@@ -2,7 +2,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useForm, useWatch } from 'react-hook-form'
 import { storage } from "../../firebase";
 import { useAuthStore } from "../../contexts/AuthStore";
-import { IProfileFormProps } from "../../pages/accountSettings";
+import { type IProfileFormProps } from "../../pages/accountSettings";
 
 type InputValues = {
   displayName: string

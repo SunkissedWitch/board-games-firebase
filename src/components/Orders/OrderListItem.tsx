@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { IProductData } from './Order'
+import type { IProductData } from './Order'
 import { formattedPrice } from '../../utils/helpers'
 
 interface DataProps {

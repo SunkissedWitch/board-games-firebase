@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useState } from 'react'
+import { Fragment, useState, type ReactNode } from 'react'
 
 type TabProps = {
   title: string

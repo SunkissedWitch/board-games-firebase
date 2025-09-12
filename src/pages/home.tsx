@@ -1,5 +1,5 @@
 import { getDocs } from 'firebase/firestore'
-import { CategoriesList, CategoriesListType } from '../components/Categories'
+import { CategoriesList, type CategoriesListType } from '../components/Categories'
 import { categoriesRef } from '../utils/collectionRefferences'
 import { Outlet, useLoaderData } from 'react-router'
 

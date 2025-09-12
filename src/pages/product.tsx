@@ -1,6 +1,6 @@
-import { Params, useLoaderData } from 'react-router'
+import { type Params, useLoaderData } from 'react-router'
 import { db } from '../firebase'
-import { DocumentData, doc, getDoc } from 'firebase/firestore'
+import { type DocumentData, doc, getDoc } from 'firebase/firestore'
 import { formattedPrice } from '../utils/helpers'
 import { StaticRatingComponent } from '../components/RatingComponent/StaticRating'
 import { ProductDetails } from '../components/ProductPage/ProductDetails'

@@ -1,4 +1,4 @@
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import { AuthErrorCodes } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { Link, useNavigate, useLocation } from 'react-router'

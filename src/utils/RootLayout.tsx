@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect } from 'react'
+import { type PropsWithChildren, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router'
 import { useAuthStore } from '../contexts/AuthStore'
 import { useCartStore } from '../contexts/CartStore'

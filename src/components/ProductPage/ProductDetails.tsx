@@ -1,5 +1,5 @@
-import { DocumentData } from 'firebase/firestore'
-import { ReactNode, useState } from 'react'
+import type { DocumentData } from 'firebase/firestore'
+import { type ReactNode, useState } from 'react'
 
 interface ChildrenProp {
   children?: ReactNode

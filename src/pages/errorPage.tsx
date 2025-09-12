@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { isRouteErrorResponse, useRouteError } from "react-router";
 
 const ErrorBlock = ({ children }: { children: ReactNode }) => {

@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase/firestore";
+import type { DocumentData } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import { formattedPrice } from "../../utils/helpers";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
