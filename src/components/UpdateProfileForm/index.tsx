@@ -1,5 +1,5 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { storage } from "../../firebase";
 import { useAuthStore } from "../../contexts/AuthStore";
 import { IProfileFormProps } from "../../pages/accountSettings";
@@ -11,11 +11,15 @@ type InputValues = {
 
 export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfileFormProps) => Promise<void> }) => {
   const profileName = useAuthStore((store) => store.currentUser?.displayName || '')
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors }, control } = useForm({
     defaultValues: {
       displayName: profileName,
       photoFile: null
     },
+  })
+  const photoFile = useWatch({
+    name: 'photoFile',
+    control
   })
   const uid = useAuthStore((store) => store.currentUser?.uid)
 
@@ -39,11 +43,12 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
     console.log('downloadURL', downloadURL)
     return downloadURL
   }
+  const photoUrl = photoFile ? URL.createObjectURL(photoFile[0]) : null
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='max-w-5xl place-self-center w-full grid grid-flow-row grid-cols-2 gap-5 gap-x-10 py-2.5'>
+    <form onSubmit={handleSubmit(onSubmit)} className='max-w-5xl place-self-center w-full grid grid-flow-row md:grid-cols-2 gap-5 gap-x-10 py-2.5'>
 
-      <label className="form-control w-full col-span-2 sm:col-span-1">
+      <label className="form-control w-full">
         <span className="label label-text">Display Name</span>
         <input
           {...register('displayName')}
@@ -54,13 +59,18 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
         {errors?.displayName && <div className="label label-text-alt text-error">{errors?.displayName.message}</div>}
       </label>
 
-      <div className='flex row-span-2 justify-center md:justify-end items-stretch avatar'>
-        <div className="border border-primary avatar placeholder">
-          <div>Image</div>
-        </div>
+      <div className='flex row-span-2 md:justify-end items-stretch avatar placeholder max-md:order-first h-[9.5rem] w-[9.5rem] self-end md:ms-auto'>
+        {photoUrl !== null
+          ? <figure className="rounded-full">
+              <img src={photoUrl} alt='Profile Picture' />
+            </figure>
+          : <div className="border border-primary max-md:min-h-[100px]">
+              <div>Image</div>
+            </div>
+        }
       </div>
 
-      <label className="form-control w-full col-span-2 sm:col-span-1">
+      <label className="form-control w-full">
         <div className="label label-text">Pick a file</div>
         <input
           {...register('photoFile')}
@@ -71,7 +81,7 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
       </label>
 
 
-      <button type='submit' className='btn btn-primary btn-wide justify-self-end col-span-2'>
+      <button type='submit' className='btn btn-primary btn-wide justify-self-end md:col-span-2'>
         Confirm
       </button>
     </form>

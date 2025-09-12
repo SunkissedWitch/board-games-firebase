@@ -47,7 +47,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
           </div>
         </div>
       </div>
-      <main className='flex flex-col grow'>{<Outlet /> || children}</main>
+      <main className='flex flex-col grow'>{children ?? <Outlet />}</main>
     </>
   )
 }
