@@ -1,4 +1,4 @@
-import { Link, createBrowserRouter } from 'react-router-dom'
+import { Link, createBrowserRouter } from 'react-router'
 import { RootLayout } from './utils/RootLayout'
 import { rootLoader, Root } from './pages/home'
 import { ProductPage, getCurrentProduct } from './pages/product'
@@ -19,6 +19,7 @@ import { AccountSettings } from './pages/accountSettings'
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
+    hydrateFallbackElement: <div>Loading app ...</div>,
     handle: { crumb: () => <Link to='/'>Home</Link> },
     children: [
       {
@@ -102,4 +103,10 @@ export const router = createBrowserRouter([
       }
     ]
   }
-])
+],
+  {
+    future: {
+      v7_partialHydration: true,
+    },
+  }
+)

@@ -1,5 +1,5 @@
 import { DocumentData } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { formattedPrice } from "../../utils/helpers";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { storage } from "../../firebase";

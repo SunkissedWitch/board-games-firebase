@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router'
 import { useAuthStore } from '../contexts/AuthStore'
 import { useCartStore } from '../contexts/CartStore'
 import { getCartData } from '../firebaseApi/CartApi'

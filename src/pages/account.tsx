@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import { useAuthStore } from "../contexts/AuthStore"
 import { OrdersCard } from "../components/AccountCards/OrdersCard"
 import { AdressesCard } from "../components/AccountCards/AdressesCard"

@@ -19,7 +19,7 @@ export interface AuthStore {
   updateUserProfile: (data: UserNewData) => void
   signup: (props: AuthProps) => Promise<UserCredential>
   login: (props: AuthProps) => Promise<UserCredential>
-  logout: () => Promise<void>
+  logout: () => Promise<unknown>
 }
 
 function signup ({ email, password }: AuthProps) {

@@ -1,4 +1,4 @@
-// import { RouterProvider } from "react-router-dom"
+// import { RouterProvider } from "react-router"
 // import { RootLayout } from "./RootLayout"
 // import { Home } from "./pages/home"
 // import { router } from "./router"

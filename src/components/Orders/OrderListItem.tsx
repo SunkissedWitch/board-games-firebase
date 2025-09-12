@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { IProductData } from './Order'
 import { formattedPrice } from '../../utils/helpers'
 

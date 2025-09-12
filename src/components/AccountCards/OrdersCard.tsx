@@ -1,6 +1,6 @@
 import { getCountFromServer, query, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import { ordersRef } from "../../utils/collectionRefferences"
 import { useAuthStore } from "../../contexts/AuthStore"
 

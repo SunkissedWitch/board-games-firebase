@@ -1,4 +1,4 @@
-import { Params, json, useLoaderData } from 'react-router-dom'
+import { Params, useLoaderData } from 'react-router'
 import { db } from '../firebase'
 import { DocumentData, doc, getDoc } from 'firebase/firestore'
 import { formattedPrice } from '../utils/helpers'
@@ -27,7 +27,7 @@ export const getCurrentProduct = async ({ params }: { params: Params }) => {
   } else {
     // docSnap.data() will be undefined in this case
     console.log('No such document!')
-    throw json('', { status: 404 })
+    throw Response.json('', { status: 404 })
   }
 }
 

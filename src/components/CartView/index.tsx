@@ -5,7 +5,7 @@ import { forEach, get } from "lodash"
 import { useState } from "react"
 import { AddressForm, AddressInputsProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
 import { useAuthStore } from "../../contexts/AuthStore"
 import { useCartStore } from "../../contexts/CartStore"

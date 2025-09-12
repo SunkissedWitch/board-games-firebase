@@ -1,6 +1,6 @@
 import { doc, getDoc } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { ordersRef } from '../utils/collectionRefferences'
 import { OrderHeader } from '../components/OrderPage/OrderHeader'
 import { IOrder } from '../components/Orders/Order'

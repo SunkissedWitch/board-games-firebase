@@ -1,7 +1,7 @@
 import { getDocs } from 'firebase/firestore'
 import { CategoriesList, CategoriesListType } from '../components/Categories'
 import { categoriesRef } from '../utils/collectionRefferences'
-import { Outlet, useLoaderData } from 'react-router-dom'
+import { Outlet, useLoaderData } from 'react-router'
 
 export const rootLoader = async () => {
   try {

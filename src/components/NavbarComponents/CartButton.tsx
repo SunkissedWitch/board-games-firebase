@@ -1,5 +1,5 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 export const CartButton = ({ totalItems }: { totalItems?: number }) => {
   const navigate = useNavigate()
