@@ -1,5 +1,5 @@
 import { useAuthStore } from "../contexts/AuthStore"
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router';
 
 export const PrivateRoutes = () => {
   const location = useLocation();

@@ -1,8 +1,8 @@
-import { DocumentData, getDocs, query, where } from 'firebase/firestore'
+import { type DocumentData, getDocs, query, where } from 'firebase/firestore'
 import { ProductCard } from './ProductCard'
-import { LoaderFunctionArgs, json, useLoaderData } from 'react-router-dom'
+import { type LoaderFunctionArgs, useLoaderData } from 'react-router'
 import { productsRef } from '../../utils/collectionRefferences'
-import { CategoriesListType } from '../Categories'
+import type { CategoriesListType } from '../Categories'
 import { rootLoader } from '../../pages/home'
 
 export const productsListLoader = async ({ params }: LoaderFunctionArgs) => {
@@ -12,7 +12,7 @@ export const productsListLoader = async ({ params }: LoaderFunctionArgs) => {
   const isInvalidCategory = category && !categoriesArray.includes(category)
 
   if (isInvalidCategory) {
-    throw json({
+    throw Response.json({
       message: "No such category found.",
     },
     { status: 404 })

@@ -1,4 +1,4 @@
-import { ReactEventHandler } from 'react'
+import type { ReactEventHandler } from 'react'
 
 type StarRatingProps = {
   value: number

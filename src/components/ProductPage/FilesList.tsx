@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { FullMetadata, getDownloadURL, getMetadata, ref } from "firebase/storage"
+import {  getDownloadURL, getMetadata, ref, type FullMetadata } from "firebase/storage"
 import { storage } from "../../firebase"
 import { DocumentIcon } from "@heroicons/react/24/solid"
 

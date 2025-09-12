@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore'
 import { formattedPrice } from '../../utils/helpers'
-import { ReactNode, PropsWithChildren } from 'react'
-import { Link } from 'react-router-dom'
+import type { ReactNode, PropsWithChildren } from 'react'
+import { Link } from 'react-router'
 
 export interface IOrderHeader {
   createdAt?: Timestamp

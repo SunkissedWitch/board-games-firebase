@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getDocs, query, where, DocumentData } from 'firebase/firestore'
+import { getDocs, query, where, type DocumentData } from 'firebase/firestore'
 import { ordersRef } from '../utils/collectionRefferences'
 import { OrderCard } from '../components/Orders/Order'
 import { useAuthStore } from '../contexts/AuthStore'

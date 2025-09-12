@@ -1,4 +1,4 @@
-import { DocumentData, Timestamp } from 'firebase/firestore'
+import { type DocumentData, Timestamp } from 'firebase/firestore'
 import { OrderCardHeader } from './OrderCardHeader'
 import { OrderListItem } from './OrderListItem'
 import { getTotalItemPrice, getTotalPrice } from '../../utils/helpers'

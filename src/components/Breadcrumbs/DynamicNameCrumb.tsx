@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router"
 
 export const DynamicNameCrumb = () => {
   const location = useLocation()
