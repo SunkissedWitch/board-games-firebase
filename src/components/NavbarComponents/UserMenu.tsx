@@ -27,7 +27,7 @@ export const UserMenu = () => {
             </div>
           }
         </div>
-        <ul tabIndex={0} className="menu dropdown-content z-[1] shadow bg-base-100 min-w-[208px] rounded-box mt-4 gap-y-2">
+        <ul tabIndex={0} className="menu dropdown-content z-1 shadow-sm bg-base-100 min-w-[208px] rounded-box mt-4 gap-y-2">
           <li className="menu-title">{profileName}</li>
           <li onClick={handleClick}>
             <Link to='/account'>

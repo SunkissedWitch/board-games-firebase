@@ -28,7 +28,7 @@ export const ProductDetails = ({ product, category }: IProductDetails) => {
   const [expand, setExpand] = useState<boolean>(false)
 
   return (
-    <div className='grid grid-cols-[1fr,_1.75fr] gap-y-5 gap-x-2.5'>
+    <div className='grid grid-cols-[1fr_1.75fr] gap-y-5 gap-x-2.5'>
       <Title>Publisher</Title>
       <DetailItem>{publisher}</DetailItem>
 

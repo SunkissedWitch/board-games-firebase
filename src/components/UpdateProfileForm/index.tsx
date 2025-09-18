@@ -59,7 +59,7 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
         {errors?.displayName && <div className="label label-text-alt text-error">{errors?.displayName.message}</div>}
       </label>
 
-      <div className='flex row-span-2 md:justify-end items-stretch avatar placeholder max-md:order-first h-[9.5rem] w-[9.5rem] self-end md:ms-auto'>
+      <div className='flex row-span-2 md:justify-end items-stretch avatar placeholder max-md:order-first h-38 w-38 self-end md:ms-auto'>
         {photoUrl !== null
           ? <figure className="rounded-full">
               <img src={photoUrl} alt='Profile Picture' />

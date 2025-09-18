@@ -26,7 +26,7 @@ export const AccountPage = () => {
         </div>
         <div className="card-body">
           <h2 className="card-title">Hello, <b>{displayName || email}</b></h2>
-          <div className="grid grid-cols-[1fr,_2fr] gap-x-5 gap-y-2.5 pt-5 mb-2.5">
+          <div className="grid grid-cols-[1fr_2fr] gap-x-5 gap-y-2.5 pt-5 mb-2.5">
             <p>Email</p>
             <p>{email}</p>
             <p>Display Name</p>

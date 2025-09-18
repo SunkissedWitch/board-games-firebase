@@ -47,7 +47,7 @@ export const OrderCard = ({ order }: OrderProps) => {
   ) as number[]
   const totalPrice = getTotalPrice(pricesArray)
   return (
-    <div className='card card-bordered shadow-sm'>
+    <div className='card card-bordered shadow-xs'>
       <OrderCardHeader
         username={deliveryData?.username}
         createdAt={createdAt}
