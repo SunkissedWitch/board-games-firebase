@@ -31,7 +31,7 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <div className='navbar bg-base-200 px-4 justify-center'>
-        <div className='container justify-between gap-5 px-2'>
+        <div className='container justify-between gap-5 px-2 flex'>
           <div className='flex-1'>
             <button className='btn btn-square btn-ghost sm:btn-lg' onClick={goToHomePage}>Logo</button>
           </div>

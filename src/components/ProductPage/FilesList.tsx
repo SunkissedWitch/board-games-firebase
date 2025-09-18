@@ -32,7 +32,7 @@ export const FileItem = ({ file }: { file: IFileAttributes }) => {
   return (
     <div className='grid grid-flow-col justify-start gap-3 w-full'>
       <div className='py-1'>
-        <DocumentIcon width={38} height={38} className='text-primary text-opacity-50' />
+        <DocumentIcon width={38} height={38} className='text-current/30' />
       </div>
       <div className='flex flex-col gap-y-2.5'>
         <a

@@ -26,7 +26,6 @@ export const Login = () => {
       email: '',
       password: ''
     },
-    mode: 'onSubmit',
     reValidateMode: 'onChange'
   })
   const { login, setUser } = useAuthStore()
@@ -57,43 +56,42 @@ export const Login = () => {
   return (
     <>
       <div className='px-5 container mx-auto py-10'>
-        <div className='mx-auto card card-compact card-bordered shadow-md max-w-sm'>
-          <form className='card-body gap-3' onSubmit={handleSubmit(onSubmit)}>
-            <div className='card-title'>Login</div>
-            <label className='form-control w-full'>
-              <div className='label'>
-                <span className='label-text'>Email</span>
-              </div>
+        <div className='mx-auto card card-sm card-border shadow-md max-w-sm'>
+          <form className='card-body' onSubmit={handleSubmit(onSubmit)}>
+            <fieldset className='fieldset text-sm'>
+              <legend className='card-title fieldset-legend'>Login</legend>
+
+              <label htmlFor='email' className='label mt-2'>Email</label>
               <TextInput
-                {...register('email', emailRule)}
+                id='email'
+                {...register("email", emailRule)}
                 autoComplete='email'
                 type='email'
                 placeholder='Type here your email'
               />
-              <div className='label'>
-                {errors?.email && <span className='label-text-alt text-error'>{errors?.email?.message}</span>}
-              </div>
-            </label>
-            <label className='form-control w-full'>
-              <div className='label'>
-                <span className='label-text'>Password</span>
-              </div>
+              {errors?.email && <label htmlFor='email' className='label text-error text-xs'>{errors?.email?.message}</label>}
+
+              <label htmlFor='password' className='label mt-2'>Password</label>
               <PasswordInput
-                {...register('password', { required: { value: true, message: 'Password is required' } })}
+                id='password'
+                {...register("password", { required: { value: true, message: "Password is required" } })}
                 placeholder='Type here your password'
               />
-              <div className='label'>
-                {errors?.password && <span className='label-text-alt text-error'>{errors?.password?.message}</span>}
-              </div>
-            </label>
-            {errors?.root?.message && <div className='alert alert-error'>{errors?.root?.message}</div>}
-            <button className='btn btn-primary mt-2.5' type='submit'>
-              Confirm
-            </button>
+              {errors?.password && <label htmlFor='password' className='label text-error text-xs'>{errors?.password?.message}</label>}
+
+              {errors?.root?.message && <div className='alert alert-error'>{errors?.root?.message}</div>}
+
+              <button className='btn btn-primary mt-3' type='submit'>
+                Confirm
+              </button>
+            </fieldset>
           </form>
-          <div className='card-body mb-5'>
+          <div className='card-body mb-3'>
             <div className='text-center'>
-              Have no account? Create it <Link to='/signup' className='link link-primary' state={{ from: location?.state?.from || '/' }}>here</Link>
+              Have no account? Create it{" "}
+              <Link to='/signup' className='link link-primary' state={{ from: location?.state?.from || "/" }}>
+                here
+              </Link>
             </div>
           </div>
         </div>

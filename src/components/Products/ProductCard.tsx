@@ -23,7 +23,7 @@ export const ProductCard = ({ product }: DocumentData) => {
   }, [])
 
   return (
-    <div className="card card-compact">
+    <div className="card card-border card-sm bg-linear-to-br from-10% from-slate-900 via-65% via-slate-100 to-95% to-slate-600">
       <figure className='bg-black'>
         <img
           src={
@@ -34,7 +34,7 @@ export const ProductCard = ({ product }: DocumentData) => {
           alt={product?.title || 'product_image'}
         />
       </figure>
-      <div className="card-body bg-slate-900 bg-opacity-80 glass">
+      <div className="card-body">
         <h2 className="card-title">{product?.title}</h2>
         <p>{formattedPrice(price)}</p>
         <div className="card-actions justify-end">

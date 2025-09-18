@@ -68,54 +68,47 @@ export const Signup = () => {
   return (
     <>
       <div className='px-5 container mx-auto py-10'>
-        <div className='mx-auto card card-compact card-bordered shadow-md max-w-sm'>
+        <div className='mx-auto card card-sm card-border shadow-md max-w-sm'>
           <form className='card-body gap-3' onSubmit={handleSubmit(onSubmit)}>
-            <div className='card-title'>Sign up</div>
-            <label className='form-control w-full'>
-              <div className='label'>
-                <span className='label-text'>Email</span>
-              </div>
+            <fieldset className='fieldset'>
+              <legend className='card-title fieldset-legend'>Sign up</legend>
+
+              <label className='label mt-2 fiel' htmlFor='email'>Email</label>
               <TextInput
                 {...register('email', emailRule)}
                 autoComplete='email'
                 type='email'
+                id='email'
                 placeholder='Type here your email'
-              />
-              <div className='label'>
-                {errors?.email && <span className='label-text-alt text-error'>{errors?.email?.message}</span>}
-              </div>
-            </label>
-            <label className='form-control w-full'>
-              <div className='label'>
-                <span className='label-text'>Password</span>
-              </div>
+              />              
+              {errors?.email && <label htmlFor='email' className='label text-error text-xs'>{errors?.email?.message}</label>}
+              
+              <label htmlFor='password' className='label mt-2'>Password</label>
               <PasswordInput
+                id='password'
                 {...register('password', { required: 'Password is required' })}
                 placeholder='Type here new password'
-                />
-              <div className='label'>
-                {errors?.password && <span className='label-text-alt text-error'>{errors?.password?.message}</span>}
-              </div>
-            </label>
-            <label className='form-control w-full'>
-              <div className='label'>
-                <span className='label-text'>Confirm your password</span>
-              </div>
+                />                
+              {errors?.password && <label htmlFor='password' className='label text-error text-xs'>{errors?.password?.message}</label>}
+              
+              <label htmlFor='confirmPassword' className='label mt-2'>Confirm your password</label>
               <PasswordInput
+                id='confirmPassword'
                 {...register('confirmPassword', { required: 'Confirm your password', validate: value =>
                 value === password.current || "The passwords do not match" })}
                 placeholder='Repeat your password'
               />
-              <div className='label'>
-                {errors?.confirmPassword && <span className='label-text-alt text-error'>{errors?.confirmPassword?.message}</span>}
-              </div>
-            </label>
-            {errors?.root?.message && <div className='alert alert-error'>{errors?.root?.message}</div>}
-            <button className='btn btn-primary mt-2.5' type='submit'>
-              Create account
-            </button>
+              {errors?.confirmPassword && (
+                <label htmlFor='confirmPassword' className='label text-error text-xs'>{errors?.confirmPassword?.message}</label>
+              )}
+
+              {errors?.root?.message && <div className='alert alert-error'>{errors?.root?.message}</div>}
+              <button className='btn btn-primary mt-3' type='submit'>
+                Create account
+              </button>
+            </fieldset>
           </form>
-          <div className='card-body mb-5'>
+          <div className='card-body mb-3'>
             <div className='text-center'>
               Already have an account? Login <Link to='/login' className='link link-primary'>here</Link>
             </div>

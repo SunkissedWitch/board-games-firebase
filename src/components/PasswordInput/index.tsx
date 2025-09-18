@@ -16,10 +16,10 @@ export const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           {...props}
-          className='input input-bordered w-full'
+          className='input w-full join-item'
           type={visible ? 'text' : 'password'}
         />
-        <button type='button' className='btn btn-primary' onClick={toggleVisibility}>
+        <button type='button' className='btn btn-primary join-item' onClick={toggleVisibility}>
           { visible
             ? <EyeSlashIcon className='h-5 w-5 text-primary-content' />
             : <EyeIcon className='h-5 w-5 text-primary-content' />

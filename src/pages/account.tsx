@@ -15,7 +15,7 @@ export const AccountPage = () => {
   return (
     <div className="flex flex-col grow gap-y-3">
       <h1 className='text-xl md:text-3xl font-semibold'>Account page</h1>
-      <div className="card md:card-side bg-base-100 shadow-xl card-compact md:card-normal">
+      <div className="card md:card-side bg-base-100 shadow-xl card-sm md:card-normal">
         <div className="avatar placeholder border-b md:border-none">
           {photoURL
           ? <figure className="md:w-64 md:aspect-square mx-auto max-h-64"><img src={photoURL} alt="user_avatar"/></figure>

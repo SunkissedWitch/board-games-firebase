@@ -68,7 +68,7 @@ export const ProductPage = () => {
           <h1 className='text-3xl font-semibold'>
             {product?.title}
           </h1>
-          <p className='text-lg font-medium text-base-content text-opacity-50'>
+          <p className='text-lg font-medium text-base-content/50'>
             {product?.description?.subtitle}
           </p>
         </div>
@@ -80,7 +80,7 @@ export const ProductPage = () => {
             <h1 className='text-3xl font-semibold'>
               {product?.title}
             </h1>
-            <p className='text-lg font-medium text-base-content text-opacity-50'>
+            <p className='text-lg font-medium text-base-content/50'>
               {product?.description?.subtitle}
             </p>
           </div>

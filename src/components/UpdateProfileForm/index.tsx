@@ -46,20 +46,31 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
   const photoUrl = photoFile ? URL.createObjectURL(photoFile[0]) : null
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='max-w-5xl place-self-center w-full grid grid-flow-row md:grid-cols-2 gap-5 gap-x-10 py-2.5'>
+    <form onSubmit={handleSubmit(onSubmit)} className='max-w-5xl place-self-center grid md:grid-cols-2 w-full gap-5 gap-x-10 py-2.5'>
 
-      <label className="form-control w-full">
-        <span className="label label-text">Display Name</span>
+      <fieldset className="fieldset">
+        <label htmlFor="displayName" className="label">Display Name</label>
         <input
           {...register('displayName')}
+          id='displayName'
           type="text"
           placeholder="Type here"
-          className="input input-primary input-bordered w-full"
+          className="input input-primary w-full"
           />
-        {errors?.displayName && <div className="label label-text-alt text-error">{errors?.displayName.message}</div>}
-      </label>
+        {errors?.displayName && <label htmlFor="displayName" className="label text-error text-xs">{errors?.displayName.message}</label>}
 
-      <div className='flex row-span-2 md:justify-end items-stretch avatar placeholder max-md:order-first h-38 w-38 self-end md:ms-auto'>
+        <label htmlFor="photoFile" className="label mt-3">Pick a file</label>
+        <input
+          {...register('photoFile')}
+          type="file"
+          id='photoFile'
+          accept='image/*'
+          className="file-input file-input-primary w-full"
+        />
+
+      </fieldset>
+
+      <div className='flex md:justify-end items-stretch avatar placeholder max-md:order-first size-32 self-end md:ms-auto'>
         {photoUrl !== null
           ? <figure className="rounded-full">
               <img src={photoUrl} alt='Profile Picture' />
@@ -70,18 +81,7 @@ export const UpdateProfileForm = ({ setNewData }: { setNewData: (params: IProfil
         }
       </div>
 
-      <label className="form-control w-full">
-        <div className="label label-text">Pick a file</div>
-        <input
-          {...register('photoFile')}
-          type="file"
-          accept='image/*'
-          className="file-input file-input-bordered w-full"
-        />
-      </label>
-
-
-      <button type='submit' className='btn btn-primary btn-wide justify-self-end md:col-span-2'>
+      <button type='submit' className='btn btn-primary btn-wide justify-self-end md:col-span-2 mt-3'>
         Confirm
       </button>
     </form>
