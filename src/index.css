@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin "daisyui" {
   themes: lofi --default;
@@ -22,6 +22,16 @@
   }
 }
 
+@utility scrollbar-none {
+  scrollbar-width: none;
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -37,16 +47,22 @@ body {
   margin: 0;
   display: flex;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
 }
 #root {
   display: flex;
   flex-direction: column;
   min-width: 320px;
   width: 100%;
+  max-height: 100dvh;
+  overflow-y: auto;
 }
 
-.input, .textarea, .select, .file-input {
+.input,
+.textarea,
+.select,
+.file-input {
   outline-offset: -1px;
   outline-width: 1px;
 }
