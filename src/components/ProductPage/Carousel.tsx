@@ -22,13 +22,13 @@ export const CarouselItem = ({ image, index, length }: ICarouselItem) => {
       <div className='absolute flex justify-between transform -translate-y-1/2 left-2 right-2 top-1/2'>
         <a
           href={index === 0 ? `#slide${length - 1}` : `#slide${index - 1}`}
-          className='btn btn-square max-w-max px-1.5 btn-ghost bg-base-300 bg-opacity-30'
+          className='btn btn-square max-w-max px-1.5 btn-ghost border-none hover:bg-base-300/30'
         >
           <ChevronLeftIcon className='h-6 stroke-2' />
         </a>
         <a
           href={index === length - 1 ? `#slide0` : `#slide${index + 1}`}
-          className='btn btn-square max-w-max px-1.5 btn-ghost bg-base-300 bg-opacity-30'
+          className='btn btn-square max-w-max px-1.5 btn-ghost border-none hover:bg-base-300/30'
         >
           <ChevronRightIcon className='h-6 stroke-2' />
         </a>
@@ -42,7 +42,7 @@ const CarouselMini = ({ image, index }: ICarouselMiniItem) => {
     <a href={`#slide${index}`} className='carousel-item'>
       <img
         src={image}
-        className='rounded-box w-20 h-20 p-1 border border-opacity-0 border-primary hover:border-opacity-100'
+        className='rounded-box w-20 h-20 p-1 border border-primary/0 hover:border-primary/100'
       />
     </a>
   )

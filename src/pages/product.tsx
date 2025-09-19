@@ -63,12 +63,12 @@ export const ProductPage = () => {
 
   return (
     <div className='px-5 container mx-auto'>
-      <div className='grid grid-cols-1 md:grid-cols-[1fr,_2fr] py-5 gap-x-5 gap-y-10 items-stretch order-first'>
+      <div className='grid grid-cols-1 md:grid-cols-[1fr_2fr] py-5 gap-x-5 gap-y-10 items-stretch order-first'>
         <div className='md:hidden flex flex-col gap-y-5 text-center'>
           <h1 className='text-3xl font-semibold'>
             {product?.title}
           </h1>
-          <p className='text-lg font-medium text-base-content text-opacity-50'>
+          <p className='text-lg font-medium text-base-content/50'>
             {product?.description?.subtitle}
           </p>
         </div>
@@ -80,7 +80,7 @@ export const ProductPage = () => {
             <h1 className='text-3xl font-semibold'>
               {product?.title}
             </h1>
-            <p className='text-lg font-medium text-base-content text-opacity-50'>
+            <p className='text-lg font-medium text-base-content/50'>
               {product?.description?.subtitle}
             </p>
           </div>
@@ -98,7 +98,7 @@ export const ProductPage = () => {
             </button>
           </div>
         </div>
-        <aside className='order-last md:order-none'>
+        <aside className='order-last md:order-0'>
           <ProductDetails product={product} category={category} />
         </aside>
         <div className='flex flex-col md:border-s border-primary md:px-5'>

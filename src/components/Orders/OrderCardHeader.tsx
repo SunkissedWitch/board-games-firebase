@@ -18,7 +18,7 @@ interface IHeaderItemProps {
 const HeaderItem = ({ header, subheader }: IHeaderItemProps) => (
   <div className='flex flex-col gap-2'>
     <div className='font-medium text-sm'>{header}</div>
-    <div className='flex text-sm text-base-content text-opacity-70'>{subheader}</div>
+    <div className='flex text-sm text-base-content/70'>{subheader}</div>
   </div>
 )
 const StyledHeader = ({ children }: PropsWithChildren) => {
@@ -46,14 +46,14 @@ export const OrderCardHeader = ({
           header='Total:'
           subheader={<span className='min-w-max'>{formattedPrice(totalPrice)}</span>}
         />
-        <HeaderItem header='Deliver to:' subheader={<span className='text-accent text-opacity-100'>{username}</span>} />
+        <HeaderItem header='Deliver to:' subheader={<span className='text-accent/100'>{username}</span>} />
       </div>
       <div className='flex flex-col gap-2.5 ms-auto'>
         <HeaderItem
           header={
             <>
               Order ID:{' '}
-              <span className='text-base-content text-opacity-50'>{orderNumber}</span>
+              <span className='text-base-content/50'>{orderNumber}</span>
             </>
           }
           subheader={

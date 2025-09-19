@@ -25,7 +25,7 @@ export const OrdersCard = () => {
   }, [])
 
   return (
-    <div className="card bg-base-100 shadow-xl card-compact md:card-normal">
+    <div className="card bg-base-100 shadow-xl card-sm md:card-normal">
       <div className="card-body">
         <h2 className="card-title">Previous orders</h2>
         <p>You have {qtyOrders} order(s) for now</p>

@@ -40,118 +40,138 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
 
   console.log('[errors]', errors)
   return (
-    <div className="card card-bordered shadow-lg">
-      <div className="card-title p-5">Deliver to:</div>
-      <form className="card-body pt-0 grid grid-cols-1 md:grid-cols-2 gap-y-2.5 gap-x-10" onSubmit={handleSubmit(onSubmit)}>
+    <div className='card card-border shadow-lg'>
+      <div className='card-title p-5'>Deliver to:</div>
+      <form className='card-body' onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid md:grid-cols-2 gap-x-10 gap-y-2.5">
+        <fieldset className='fieldset'>
+          <label htmlFor='city' className='label'>
+            City
+          </label>
+          <TextInput id='city' {...register("city", addressRules.city)} placeholder='City' />
+          {errors?.city && (
+            <label htmlFor='city' className='label text-xs text-error'>
+              {errors?.city?.message}
+            </label>
+          )}
+        </fieldset>
 
-        <label className="form-control w-full">
-          <div className="label label-text">City</div>
-          <TextInput {...register("city", addressRules.city)} placeholder="City" />
-          <div className="label">
-            {errors?.city && (
-              <span className="label-text-alt text-error">
-                {errors?.city?.message}
-              </span>
-            )}
-          </div>
-        </label>
+        <fieldset className='fieldset md:row-span-3 flex flex-col'>
+          <label htmlFor='address' className='label'>
+            Address
+          </label>
+          <textarea
+            id='address'
+            rows={1}
+            className='textarea min-h-24 w-full textarea-bordered h-full! self-stretch'
+            {...register("address", addressRules.address)}
+            placeholder='Address'
+            autoComplete='on'
+          />
+          {errors?.address && (
+            <label htmlFor='address' className='label text-xs text-error'>
+              {errors?.address?.message}
+            </label>
+          )}
+        </fieldset>
 
-        <label className="form-control w-full row-span-2">
-          <div className="label label-text">Address</div>
-          <textarea className='textarea textarea-bordered h-full' {...register("address", addressRules.address)} placeholder="Address" autoComplete="on" />
-          <div className="label">
-            {errors?.address && (
-              <span className="label-text-alt text-error">
-                {errors?.address?.message}
-              </span>
-            )}
-          </div>
-        </label>
+        <fieldset className='fieldset'>
+          <label htmlFor='tel' className='label'>
+            Phone number
+          </label>
+          <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
+          {errors?.tel && (
+            <label htmlFor='tel' className='label text-xs text-error'>
+              {errors?.tel?.message}
+            </label>
+          )}
+        </fieldset>
 
-        <label className="form-control w-full">
-          <div className="label label-text">Phone number</div>
-            <TextInput
-              {...register("tel", addressRules.tel)}
-              placeholder="Phone number"
-              type="tel"
-            />
-          <div className="label">
-            {errors?.tel && (
-              <span className="label-text-alt text-error">
-                {errors?.tel?.message}
-              </span>
-            )}
-          </div>
-        </label>
-
-        <label className="form-control w-full">
-          <div className="label label-text">Choose a courier service</div>
-          <select {...register('courierServise', addressRules.courierServise)} className='select select-bordered'>
-            {entries(POST_SERVICES).map(([key, value]) => (<option key={key} value={key}>{value}</option>))}
+        <fieldset className='fieldset'>
+          <label htmlFor='courierServise' className='label'>
+            Choose a courier service
+          </label>
+          <select
+            id='courierServise'
+            {...register("courierServise", addressRules.courierServise)}
+            className='select w-full'
+          >
+            {entries(POST_SERVICES).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
           </select>
-          <div className="label">
-            {errors?.courierServise && (
-              <span className="label-text-alt text-error">
-                {errors?.courierServise?.message}
-              </span>
-            )}
-          </div>
-        </label>
+          {errors?.courierServise && (
+            <label htmlFor='courierServise' className='label text-xs text-error'>
+              {errors?.courierServise?.message}
+            </label>
+          )}
+        </fieldset>
 
-        { watchService === 'ukr_poshta' && <label className="form-control w-full">
-          <div className="label label-text">Post Code</div>
-          <TextInput
-            {...register('postCode', addressRules.postCode)}
-            placeholder="69000"
-            autoComplete="postal-code"
-          />
-          <div className="label">
+        {watchService === "ukr_poshta" && (
+          <fieldset className='fieldset'>
+            <label htmlFor='postCode' className='label'>
+              Post Code
+            </label>
+            <TextInput
+              id='postCode'
+              {...register("postCode", addressRules.postCode)}
+              placeholder='69000'
+              autoComplete='postal-code'
+            />
             {errors?.postCode && (
-              <span className="label-text-alt text-error">
+              <label htmlFor='postCode' className='label text-xs text-error'>
                 {errors?.postCode?.message}
-              </span>
+              </label>
             )}
-          </div>
-        </label>
-        }
+          </fieldset>
+        )}
 
-        { watchService === 'nova_poshta' && <label className="form-control w-full">
-          <div className="label label-text">Post office</div>
-          <TextInput
-            {...register('postOffice', addressRules.postOffice)}
-            placeholder="#20"
-            autoComplete="shipping address-level3"
-          />
-          <div className="label">
+        {watchService === "nova_poshta" && (
+          <fieldset className='fieldset'>
+            <label htmlFor='postOffice' className='label'>
+              Post office
+            </label>
+            <TextInput
+              id='postOffice'
+              {...register("postOffice", addressRules.postOffice)}
+              placeholder='#20'
+              autoComplete='shipping address-level3'
+            />
+
             {errors?.postOffice && (
-              <span className="label-text-alt text-error">
+              <label htmlFor='postOffice' className='label text-xs text-error'>
                 {errors?.postOffice?.message}
-              </span>
+              </label>
             )}
-          </div>
-        </label>
-        }
+          </fieldset>
+        )}
 
-
-        <label className="form-control w-full">
-          <div className="label label-text">Who will receive it?</div>
+        <fieldset className='fieldset'>
+          <label htmlFor='username' className='label'>
+            Who will receive it?
+          </label>
           <TextInput
-            {...register('username', addressRules.username)}
-            placeholder="John Doe"
-            autoComplete="name"
+            id='username'
+            {...register("username", addressRules.username)}
+            placeholder='John Doe'
+            autoComplete='name'
           />
-          <div className="label">
-            {errors?.username && (
-              <span className="label-text-alt text-error">
-                {errors?.username?.message}
-              </span>
-            )}
-          </div>
-        </label>
-
-        <button className='btn btn-primary btn-outline mt-auto mb-4' type='submit'>Next step</button>
+          {errors?.username && (
+            <label htmlFor='username' className='label text-xs text-error'>
+              {errors?.username?.message}
+            </label>
+          )}
+        </fieldset>
+        <div className="md:col-span-2 grid grid-cols-subgrid">
+          <button className='btn btn-primary btn-outline md:col-start-2' type='submit'>
+            Next step
+          </button>
+        </div>
+        </div>
 
       </form>
     </div>
-  );
+  )
 };

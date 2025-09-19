@@ -15,7 +15,7 @@ export const Counter = ({ quantity, productId }: CounterProps) => {
   }
   return (
     <div className='flex place-items-center'>
-      <div className='flex flex-row gap-x-2 justify-between items-center w-[7.5rem] shrink-0'>
+      <div className='flex flex-row gap-x-2 justify-between items-center w-30 shrink-0'>
         <button className='btn btn-square btn-sm btn-ghost shrink-0' onClick={subtract}>
           <MinusIcon className='w-4 h-4 sm:w-5 sm:h-5' />
         </button>

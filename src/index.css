@@ -1,6 +1,36 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: lofi --default;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -17,11 +47,27 @@ body {
   margin: 0;
   display: flex;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
 }
 #root {
   display: flex;
   flex-direction: column;
   min-width: 320px;
   width: 100%;
+  max-height: 100dvh;
+  overflow-y: auto;
+}
+
+.input,
+.textarea,
+.select,
+.file-input {
+  outline-offset: -1px;
+  outline-width: 1px;
+}
+
+.btn {
+  outline-offset: 0;
+  outline-width: 1px;
 }

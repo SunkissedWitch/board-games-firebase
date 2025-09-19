@@ -10,7 +10,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         type='text'
-        className='input input-bordered w-full'
+        className='input w-full'
         ref={ref}
         {...props}
       />

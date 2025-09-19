@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router"
 export const SuccessPage = () => {
   const { orderId } = useParams()
   return (
-    <section className='flex flex-col place-content-start justify-items-center w-full flex-grow bg-base-300 relative'>
+    <section className='flex flex-col place-content-start justify-items-center w-full grow bg-base-300 relative'>
        <figure className='absolute self-center w-full max-w-lg'>
         <img src='/public/wreath.svg' className='h-auto w-screen py-3'/>
       </figure>

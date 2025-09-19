@@ -12,7 +12,7 @@ interface IDescriptionTabs {
 export const DescriptionTabs = ({ tabs }: IDescriptionTabs) => {
   const [currentTab, setCurrentTab] = useState<string>('Description')
   return (
-    <div role='tablist' className='tabs tabs-bordered'>
+    <div role='tablist' className='tabs tabs-border'>
       {tabs.map((tab: TabProps) => (
         <Fragment key={tab.title}>
           <input

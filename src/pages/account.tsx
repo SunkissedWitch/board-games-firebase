@@ -15,7 +15,7 @@ export const AccountPage = () => {
   return (
     <div className="flex flex-col grow gap-y-3">
       <h1 className='text-xl md:text-3xl font-semibold'>Account page</h1>
-      <div className="card md:card-side bg-base-100 shadow-xl card-compact md:card-normal">
+      <div className="card md:card-side bg-base-100 shadow-xl card-sm md:card-normal">
         <div className="avatar placeholder border-b md:border-none">
           {photoURL
           ? <figure className="md:w-64 md:aspect-square mx-auto max-h-64"><img src={photoURL} alt="user_avatar"/></figure>
@@ -26,7 +26,7 @@ export const AccountPage = () => {
         </div>
         <div className="card-body">
           <h2 className="card-title">Hello, <b>{displayName || email}</b></h2>
-          <div className="grid grid-cols-[1fr,_2fr] gap-x-5 gap-y-2.5 pt-5 mb-2.5">
+          <div className="grid grid-cols-[1fr_2fr] gap-x-5 gap-y-2.5 pt-5 mb-2.5">
             <p>Email</p>
             <p>{email}</p>
             <p>Display Name</p>
