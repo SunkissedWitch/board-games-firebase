@@ -9,6 +9,7 @@ interface ComboBoxProps<T> {
   value?: T | null
   onQueryChange?: (q: string) => void
   loading?: boolean
+  placeholder?: string
 }
 
 export const ComboBox = <T,>({
@@ -20,6 +21,7 @@ export const ComboBox = <T,>({
   value,
   onQueryChange,
   loading,
+  placeholder = 'Search...'
 }: ComboBoxProps<T>) => {
   const [query, setQuery] = useState<string>("")
 
@@ -28,7 +30,7 @@ export const ComboBox = <T,>({
   const handleQueryChange = (q: string) => {
     setQuery(q)
     onQueryChange?.(q)
-  }
+  } 
 
   return (
     <div className='flex flex-col gap-1 min-w-64'>
@@ -42,7 +44,7 @@ export const ComboBox = <T,>({
         <input
           id={id}
           type='text'
-          placeholder='Search...'
+          placeholder={placeholder}
           className='input input-bordered w-full'
           value={value ? getOptionLabel(value) : query}
           onChange={(e) => {
@@ -58,18 +60,23 @@ export const ComboBox = <T,>({
               <div>Loading...</div>
             </li>
           ) : options.length > 0 ? (
-            options.map((item, idx) => (
+            options.map((item, idx) => {
+              const description = getOptionDescription(item)
+              return (
               <li key={idx}>
                 <button
                   type='button'
-                  onClick={() => onChange?.(item)}
+                  onClick={(e) => {
+                    onChange?.(item)
+                    e.currentTarget.blur()
+                  }}
                   className='grid grid-flow-row-dense auto-rows-max gap-0'
                 >
                   <span className='text-sm'>{getOptionLabel(item)}</span>
-                  <span className='text-current/70'>{getOptionDescription(item)}</span>
+                  {description.length > 0 && <span className='text-current/70'>{description}</span>}
                 </button>
               </li>
-            ))
+            )})
           ) : (
             <li className='disabled'>
               <span>No results</span>
