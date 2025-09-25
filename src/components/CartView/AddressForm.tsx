@@ -1,25 +1,18 @@
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { TextInput } from "../TextInput"
 import { addressRules } from "../../utils/formRules"
 import { CitySelect } from "./CitySelect"
-import { ComboBox } from "../ComboBox"
+import { WarehouseTypeSelect } from "./WarehouseTypeSelect"
+import { WarehouseSelect } from "./WarehouseSelect"
 
 export type AddressInputsProps = {
-  // region: RegionData | null
   city: CityProps | null
-  // cityRef: string
-  address: string
+  // address: string
   tel: string
   postCode?: string
   postOffice?: string
   username: string
 }
-// export type RegionData = {
-//   Ref: string
-//   AreasCenter: string
-//   DescriptionRu: string
-//   Description: string
-// }
 export type CityProps = {
   Ref: string
   SettlementType: string
@@ -29,9 +22,30 @@ export type CityProps = {
   RegionsDescription: string
   AreaDescription: string
 }
+export type WarehouseProps = {
+  Description: string
+  ShortAddress: string
+  Ref: string
+}
+
+export type WarehouseTypeProps = {
+  Ref: string
+  Description: string
+}
 
 type onSubmitProp = {
   onSubmit: (_props: AddressInputsProps) => void
+}
+
+type FormProps = {
+  city: CityProps | null
+  warehouseType: WarehouseTypeProps["Ref"] | null
+  warehouseRef: WarehouseProps | null
+  address: string
+  tel: string
+  postCode: string
+  postOffice: string
+  username: string
 }
 
 export const AddressForm = ({ onSubmit }: onSubmitProp) => {
@@ -40,17 +54,28 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormProps>({
     defaultValues: {
       // region: null,
       city: null,
-      // cityRef: null,
-      address: "",
+      warehouseType: null,
+      warehouseRef: null,
+      // address: "",
       tel: "",
       postCode: "",
       postOffice: "",
       username: "",
     },
+  })
+
+  const watchCity = useWatch({
+    name: "city",
+    control,
+  })
+
+  const watchWarehouseType = useWatch({
+    name: "warehouseType",
+    control,
   })
 
   // console.log('[errors]', errors)
@@ -59,34 +84,28 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
       <div className='card-title p-5'>Deliver to:</div>
       <form className='card-body' onSubmit={handleSubmit(onSubmit)}>
         <div className='grid md:grid-cols-2 gap-x-10 gap-y-2.5'>
-          {/* <fieldset className='fieldset'>
-            <label htmlFor='city' className='label'>
-              City
-            </label>
-            <TextInput id='city' {...register("city", addressRules.city)} placeholder='City' />
-            {errors?.city && (
-              <label htmlFor='city' className='label text-xs text-error'>
-                {errors?.city?.message}
-              </label>
-            )}
-          </fieldset>
-          <Controller name='cityRef' control={control} render={({ field }) => <CitySelect {...field} />} /> */}
           <Controller name='city' control={control} render={({ field }) => <CitySelect {...field} />} />
-          {/* <fieldset className='fieldset'>
-            <label htmlFor='cityRef' className='label'>
-              City
+          <fieldset className='fieldset'>
+            <label htmlFor='warehouseType' className='label'>
+              Warehouse Type
             </label>
-            <select id='cityRef' {...register("cityRef")}>
-              <option key={city}>{city}</option>
-            </select>
-            {errors?.city && (
-              <label htmlFor='cityRef' className='label text-xs text-error'>
-                {errors?.city?.message}
-              </label>
-            )}
-          </fieldset> */}
+            <Controller
+              name='warehouseType'
+              control={control}
+              render={({ field }) => <WarehouseTypeSelect id='warehouseType' {...field} />}
+            />
+          </fieldset>
+          {watchCity && watchCity.Ref && watchWarehouseType && (
+            <Controller
+              name='warehouseRef'
+              control={control}
+              render={({ field }) => (
+                <WarehouseSelect {...field} typeOfWarehouseRef={watchWarehouseType} cityRef={watchCity.Ref} />
+              )}
+            />
+          )}
 
-          <fieldset className='fieldset md:row-span-3 flex flex-col'>
+          {/* <fieldset className='fieldset md:row-span-3 flex flex-col'>
             <label htmlFor='address' className='label'>
               Address
             </label>
@@ -103,7 +122,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
                 {errors?.address?.message}
               </label>
             )}
-          </fieldset>
+          </fieldset> */}
 
           <fieldset className='fieldset'>
             <label htmlFor='tel' className='label'>
