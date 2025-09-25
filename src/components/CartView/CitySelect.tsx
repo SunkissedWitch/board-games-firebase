@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import { ComboBox } from "../ComboBox"
 import type { CityProps } from "./AddressForm"
-import { fakeFetch } from "../../utils/fakeFetch"
-import mockdata from "./mockdata.json"
+import { npRESTcall } from "../../NovaPostApi/npRestCall"
 
 interface SelectProps {
   onChange?: (value: CityProps | null) => void
@@ -13,23 +12,11 @@ export const CitySelect = ({ onChange, value }: SelectProps) => {
   const [citiesList, setCitiesList] = useState<CityProps[] | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [query, setQuery] = useState<string>("")
-
-  const NP_API = import.meta.env.VITE_NOVA_API
-  const NP_API_KEY = import.meta.env.VITE_NOVA_API_KEY
   const getOptionLabel = (value: CityProps) => value.Description
 
-  const getOptionDescription = (value: CityProps) => {
-    if (value.SettlementTypeDescription !== "місто") {
-      return `(${value.SettlementTypeDescription}, ${value.AreaDescription} область, ${value.RegionsDescription} район)`
-      // return `${value.Description} (${value.SettlementTypeDescription}, ${value.RegionsDescription})`
-    }
-    return `(${value.SettlementTypeDescription}, ${value.AreaDescription} область)`
-  }
-
-  console.log("NP_API", NP_API, NP_API_KEY)
+  const getOptionDescription = (value: CityProps) => value.SettlementTypeDescription
 
   const onQueryChange = (q: string) => {
-    console.log("query", q)
     setQuery(q)
   }
 
@@ -41,24 +28,14 @@ export const CitySelect = ({ onChange, value }: SelectProps) => {
 
     let ignore = false
     const fetchCities = async () => {
+      console.log("fetchCities", query)
       setLoading(true)
       try {
-        // const res = await fakeFetch(mockdata, 300)
-        // const data = await res.json()
-        // if (!ignore && res.success) {
-        //   setCitiesList(res.data as CityProps[])
-        // }
-        const res = await fetch(NP_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            apiKey: NP_API_KEY,
-            modelName: "Address",
-            calledMethod: "getCities",
-            methodProperties: { FindByString: query, Limit: 20 },
-          }),
+        const data = await npRESTcall({
+          modelName: "Address",
+          calledMethod: "getCities",
+          methodProperties: { FindByString: query, Limit: 20 },
         })
-        const data = await res.json()
         if (!ignore && data.success) {
           setCitiesList(data.data as CityProps[])
         }
@@ -74,7 +51,7 @@ export const CitySelect = ({ onChange, value }: SelectProps) => {
       ignore = true
       clearTimeout(timeout)
     }
-  }, [query, NP_API, NP_API_KEY])
+  }, [query, npRESTcall])
 
   return (
     <ComboBox
