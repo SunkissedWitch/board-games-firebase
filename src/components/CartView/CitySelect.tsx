@@ -2,13 +2,15 @@ import { useEffect, useState } from "react"
 import { ComboBox } from "../ComboBox"
 import type { CityProps } from "./AddressForm"
 import { npRESTcall } from "../../NovaPostApi/npRestCall"
+import type { ErrorOption } from "react-hook-form"
 
 interface SelectProps {
   onChange?: (value: CityProps | null) => void
   value?: CityProps | null
+  error?: ErrorOption
 }
 
-export const CitySelect = ({ onChange, value }: SelectProps) => {
+export const CitySelect = ({ onChange, value, error }: SelectProps) => {
   const [citiesList, setCitiesList] = useState<CityProps[] | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [query, setQuery] = useState<string>("")
@@ -59,10 +61,12 @@ export const CitySelect = ({ onChange, value }: SelectProps) => {
       onChange={onChange}
       options={citiesList ?? []}
       label='Select City'
+      placeholder='Start typing to search...'
       onQueryChange={onQueryChange}
       loading={loading}
       getOptionLabel={getOptionLabel}
       getOptionDescription={getOptionDescription}
+      error={error}
     />
   )
 }

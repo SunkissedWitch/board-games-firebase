@@ -79,6 +79,7 @@ export const CartView = ({ products }: CartViewProps) => {
           return <CartItem key={product.productId} product={product} />
         })}
         <AddressForm onSubmit={onSubmitAddress} />
+        {/* TODO: add payment method */}
       </div>
       <div className='card card-border shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-accent/30'>
         <TotalPrice totalPrice={totalPrice} totalItems={totalItems} />

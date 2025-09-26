@@ -7,10 +7,10 @@ import { WarehouseSelect } from "./WarehouseSelect"
 
 export type AddressInputsProps = {
   city: {
-    Ref: CityProps['Ref']
-    Description: CityProps['Description']
+    Ref: CityProps["Ref"]
+    Description: CityProps["Description"]
   } | null
-  warehouse: Omit<WarehouseProps, 'ShortAddress'>
+  warehouse: Omit<WarehouseProps, "ShortAddress">
   tel: string
   username: string
 }
@@ -86,7 +86,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
     const deliveryDetails = {
       city: {
         Ref: values.city.Ref,
-        Description: values.city.Description
+        Description: values.city.Description,
       },
       warehouse: {
         Description: values.warehouseRef.Description,
@@ -95,73 +95,100 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
         CityRef: values.warehouseRef.CityRef,
       },
       tel: values.tel,
-      username: values.username
+      username: values.username,
     }
     onSubmit(deliveryDetails)
   }
 
-  // console.log('[errors]', errors)
   return (
-    <div className='card card-border shadow-lg'>
+    <div className='card card-border shadow-lg @container/form-body'>
       <div className='card-title p-5'>Deliver to:</div>
       <form className='card-body' onSubmit={handleSubmit(handleSubmitValues)}>
-        <div className='grid md:grid-cols-2 gap-x-10 gap-y-2.5'>
-          <div className='grid grid-flow-row-dense gap-y-2.5 auto-rows-max'>
-            <fieldset className='fieldset'>
-              <label htmlFor='tel' className='label'>
-                Phone number
+        <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 gap-y-2.5'>
+          <fieldset className='fieldset'>
+            <label htmlFor='tel' className='label'>
+              Phone number
+            </label>
+            <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
+            {errors?.tel && (
+              <label htmlFor='tel' className='label text-xs text-error'>
+                {errors?.tel?.message}
               </label>
-              <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
-              {errors?.tel && (
-                <label htmlFor='tel' className='label text-xs text-error'>
-                  {errors?.tel?.message}
-                </label>
-              )}
-            </fieldset>
-            <fieldset className='fieldset'>
-              <label htmlFor='username' className='label'>
-                Who will receive it?
-              </label>
-              <TextInput
-                id='username'
-                {...register("username", addressRules.username)}
-                placeholder='John Doe'
-                autoComplete='name'
-              />
-              {errors?.username && (
-                <label htmlFor='username' className='label text-xs text-error'>
-                  {errors?.username?.message}
-                </label>
-              )}
-            </fieldset>
-          </div>
-          <div className='grid grid-flow-row-dense gap-y-2.5 auto-rows-max'>
-            <fieldset className='fieldset'>
-              <label htmlFor='warehouseType' className='label'>
-                Warehouse Type
-              </label>
-              <Controller
-                name='warehouseType'
-                control={control}
-                render={({ field }) => <WarehouseTypeSelect id='warehouseType' {...field} />}
-              />
-            </fieldset>
-            <Controller name='city' control={control} render={({ field }) => <CitySelect {...field} />} />
-            {watchCity && watchCity.Ref && watchWarehouseType && (
-              <Controller
-                name='warehouseRef'
-                control={control}
-                render={({ field }) => (
-                  <WarehouseSelect {...field} typeOfWarehouseRef={watchWarehouseType} cityRef={watchCity.Ref} />
-                )}
-              />
             )}
-          </div>
-          <div className='md:col-span-2 grid grid-cols-subgrid'>
-            <button className='btn btn-primary btn-outline md:col-start-2' type='submit'>
-              Next step
-            </button>
-          </div>
+          </fieldset>
+          <fieldset className='fieldset'>
+            <label htmlFor='username' className='label'>
+              Who will receive it?
+            </label>
+            <TextInput
+              id='username'
+              {...register("username", addressRules.username)}
+              placeholder='John Doe'
+              autoComplete='name'
+            />
+            {errors?.username && (
+              <label htmlFor='username' className='label text-xs text-error'>
+                {errors?.username?.message}
+              </label>
+            )}
+          </fieldset>
+
+          <fieldset className='fieldset'>
+            <label htmlFor='warehouseType' className='label'>
+              Warehouse Type
+            </label>
+            <Controller
+              name='warehouseType'
+              rules={{
+                required: "Select warehouse type",
+              }}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <WarehouseTypeSelect id='warehouseType' {...field} />
+                  {error && error.message && (
+                    <label htmlFor='warehouseType' className='label text-xs text-error'>
+                      {error?.message}
+                    </label>
+                  )}
+                </>
+              )}
+            />
+          </fieldset>
+          <Controller
+            name='city'
+            control={control}
+            rules={{
+              required: "Select city",
+            }}
+            render={({ field, fieldState: { error } }) => <CitySelect {...field} error={error} />}
+          />
+          {watchCity && watchCity.Ref && watchWarehouseType && (
+            <Controller
+              name='warehouseRef'
+              control={control}
+              rules={{
+                required: "Select warehouse",
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <WarehouseSelect
+                  {...field}
+                  typeOfWarehouseRef={watchWarehouseType}
+                  cityRef={watchCity.Ref}
+                  error={error}
+                />
+              )}
+            />
+          )}
+        </div>
+        <div className='w-full h-px bg-current/10 my-4 flex-none' />
+        <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 place-items-end'>
+          <button
+            className='btn btn-primary btn-outline w-full @min-lg/form-body:col-start-2 @min-3xl/form-body:btn-wide'
+            type='submit'
+          >
+            Next step
+          </button>
         </div>
       </form>
     </div>

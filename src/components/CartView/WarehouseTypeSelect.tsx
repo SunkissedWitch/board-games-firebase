@@ -45,7 +45,7 @@ export const WarehouseTypeSelect = ({ onChange, value, ...props }: SelectProps) 
       data-placeholder={value === null}
     >
       <option key='placeholder' disabled defaultChecked value=''>
-        Select warehouse type
+        {loading ? "Loading..." : "Select warehouse type"}
       </option>
       {warehouseTypesList?.map((warehouse) => (
         <option key={warehouse.Ref} value={warehouse.Ref}>

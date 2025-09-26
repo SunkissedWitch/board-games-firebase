@@ -1,6 +1,9 @@
-import { useId, useState } from "react"
+import { useId, useState, type ComponentProps } from "react"
+import type { ErrorOption } from "react-hook-form"
 
-interface ComboBoxProps<T> {
+type NativeInputProps = ComponentProps<"input">
+
+interface ComboBoxProps<T> extends Omit<NativeInputProps, "value" | "onChange"> {
   label?: string
   options: T[]
   getOptionLabel: (option: T) => string
@@ -9,7 +12,7 @@ interface ComboBoxProps<T> {
   value?: T | null
   onQueryChange?: (q: string) => void
   loading?: boolean
-  placeholder?: string
+  error?: ErrorOption
 }
 
 export const ComboBox = <T,>({
@@ -21,7 +24,9 @@ export const ComboBox = <T,>({
   value,
   onQueryChange,
   loading,
-  placeholder = 'Search...'
+  placeholder = "Search...",
+  error,
+  ...props
 }: ComboBoxProps<T>) => {
   const [query, setQuery] = useState<string>("")
 
@@ -30,10 +35,10 @@ export const ComboBox = <T,>({
   const handleQueryChange = (q: string) => {
     setQuery(q)
     onQueryChange?.(q)
-  } 
+  }
 
   return (
-    <fieldset className='fieldset min-w-64'>
+    <fieldset className='fieldset'>
       {label && (
         <label className='label' htmlFor={id}>
           {label}
@@ -52,6 +57,7 @@ export const ComboBox = <T,>({
             onChange?.(null)
           }}
           onFocus={() => onChange?.(null)}
+          {...props}
         />
 
         <ul className='dropdown-content menu menu-xs flex-nowrap bg-base-100 rounded-field z-1 w-full p-1 shadow max-h-60 overflow-y-auto'>
@@ -61,29 +67,35 @@ export const ComboBox = <T,>({
             </li>
           ) : options.length > 0 ? (
             options.map((item, idx) => {
-              const description = getOptionDescription?.(item) || ''
+              const description = getOptionDescription?.(item) || ""
               return (
-              <li key={idx}>
-                <button
-                  type='button'
-                  onClick={(e) => {
-                    onChange?.(item)
-                    e.currentTarget.blur()
-                  }}
-                  className='grid grid-flow-row-dense auto-rows-max gap-0'
-                >
-                  <span className='text-sm'>{getOptionLabel(item)}</span>
-                  {description.length > 0 && <span className='text-current/70'>{description}</span>}
-                </button>
-              </li>
-            )})
+                <li key={idx}>
+                  <button
+                    type='button'
+                    onClick={(e) => {
+                      onChange?.(item)
+                      e.currentTarget.blur()
+                    }}
+                    className='grid grid-flow-row-dense auto-rows-max gap-0'
+                  >
+                    <span className='text-sm'>{getOptionLabel(item)}</span>
+                    {description.length > 0 && <span className='text-current/70'>{description}</span>}
+                  </button>
+                </li>
+              )
+            })
           ) : (
             <li className='opacity-60 italic'>
-              <span>{query.length >= 3 ? 'No results' : 'Start typing to search...'}</span>
+              <span>{query.length >= 3 ? "No results" : "Start typing to search..."}</span>
             </li>
           )}
         </ul>
       </div>
+      {error && error.message && (
+        <label htmlFor={id} className='label text-xs text-error'>
+          {error.message}
+        </label>
+      )}
     </fieldset>
   )
 }

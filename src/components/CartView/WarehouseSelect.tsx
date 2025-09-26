@@ -2,25 +2,24 @@ import { useEffect, useState } from "react"
 import { ComboBox } from "../ComboBox"
 import { npRESTcall } from "../../NovaPostApi/npRestCall"
 import type { WarehouseProps } from "./AddressForm"
+import type { ErrorOption } from "react-hook-form"
 
 interface WarehouseSelectProps {
   onChange?: (value: WarehouseProps | null) => void
   value?: WarehouseProps | null
   cityRef: string
   typeOfWarehouseRef: string
+  error?: ErrorOption
 }
 
-export const WarehouseSelect = ({ onChange, value, cityRef, typeOfWarehouseRef }: WarehouseSelectProps) => {
+export const WarehouseSelect = ({ onChange, value, cityRef, typeOfWarehouseRef, error }: WarehouseSelectProps) => {
   const [warehouseList, setWarehouseList] = useState<WarehouseProps[] | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [query, setQuery] = useState<string>("")
 
   const getOptionLabel = (value: WarehouseProps) => value.Description
 
-  const onQueryChange = (q: string) => {
-    console.log("query", q)
-    setQuery(q)
-  }
+  const onQueryChange = (q: string) => setQuery(q)
 
   useEffect(() => {
     let ignore = false
@@ -62,9 +61,11 @@ export const WarehouseSelect = ({ onChange, value, cityRef, typeOfWarehouseRef }
       onChange={onChange}
       options={warehouseList ?? []}
       label='Select Warehouse'
+      placeholder='Start typing to search...'
       onQueryChange={onQueryChange}
       loading={loading}
       getOptionLabel={getOptionLabel}
+      error={error}
     />
   )
 }
