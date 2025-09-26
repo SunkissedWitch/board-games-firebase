@@ -4,7 +4,7 @@ interface ComboBoxProps<T> {
   label?: string
   options: T[]
   getOptionLabel: (option: T) => string
-  getOptionDescription: (option: T) => string
+  getOptionDescription?: (option: T) => string
   onChange?: (value: T | null) => void
   value?: T | null
   onQueryChange?: (q: string) => void
@@ -33,7 +33,7 @@ export const ComboBox = <T,>({
   } 
 
   return (
-    <div className='flex flex-col gap-1 min-w-64'>
+    <fieldset className='fieldset min-w-64'>
       {label && (
         <label className='label' htmlFor={id}>
           {label}
@@ -61,7 +61,7 @@ export const ComboBox = <T,>({
             </li>
           ) : options.length > 0 ? (
             options.map((item, idx) => {
-              const description = getOptionDescription(item)
+              const description = getOptionDescription?.(item) || ''
               return (
               <li key={idx}>
                 <button
@@ -78,12 +78,12 @@ export const ComboBox = <T,>({
               </li>
             )})
           ) : (
-            <li className='disabled'>
-              <span>No results</span>
+            <li className='opacity-60 italic'>
+              <span>{query.length >= 3 ? 'No results' : 'Start typing to search...'}</span>
             </li>
           )}
         </ul>
       </div>
-    </div>
+    </fieldset>
   )
 }

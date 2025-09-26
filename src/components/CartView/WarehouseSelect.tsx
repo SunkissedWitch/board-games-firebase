@@ -17,19 +17,12 @@ export const WarehouseSelect = ({ onChange, value, cityRef, typeOfWarehouseRef }
 
   const getOptionLabel = (value: WarehouseProps) => value.Description
 
-  const getOptionDescription = () => ""
-
   const onQueryChange = (q: string) => {
     console.log("query", q)
     setQuery(q)
   }
 
   useEffect(() => {
-    if (query.length < 3) {
-      setWarehouseList([])
-      return
-    }
-
     let ignore = false
     const fetchCities = async () => {
       setLoading(true)
@@ -72,7 +65,6 @@ export const WarehouseSelect = ({ onChange, value, cityRef, typeOfWarehouseRef }
       onQueryChange={onQueryChange}
       loading={loading}
       getOptionLabel={getOptionLabel}
-      getOptionDescription={getOptionDescription}
     />
   )
 }
