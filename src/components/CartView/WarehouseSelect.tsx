@@ -53,7 +53,7 @@ export const WarehouseSelect = ({ onChange, value, cityRef, typeOfWarehouseRef, 
       ignore = true
       clearTimeout(timeout)
     }
-  }, [query, npRESTcall])
+  }, [query, npRESTcall, cityRef, typeOfWarehouseRef])
 
   return (
     <ComboBox

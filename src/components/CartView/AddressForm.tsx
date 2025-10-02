@@ -4,6 +4,7 @@ import { addressRules } from "../../utils/formRules"
 import { CitySelect } from "./CitySelect"
 import { WarehouseTypeSelect } from "./WarehouseTypeSelect"
 import { WarehouseSelect } from "./WarehouseSelect"
+import { useEffect } from "react"
 
 export type AddressInputsProps = {
   city: {
@@ -57,6 +58,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
     handleSubmit,
     control,
     formState: { errors },
+    resetField
   } = useForm<FormProps>({
     defaultValues: {
       city: null,
@@ -78,6 +80,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
     name: "warehouseType",
     control,
   })
+
   const handleSubmitValues = (values: FormProps) => {
     if (!values.warehouseRef || !values.city) {
       return
@@ -99,6 +102,11 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
     }
     onSubmit(deliveryDetails)
   }
+
+  useEffect(() => {
+    if (!watchCity || !watchWarehouseType) return
+    resetField('warehouseRef')
+  }, [watchCity?.Ref, watchWarehouseType])
 
   return (
     <div className='card card-border shadow-lg @container/form-body'>
@@ -173,6 +181,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
               render={({ field, fieldState: { error } }) => (
                 <WarehouseSelect
                   {...field}
+                  key={watchWarehouseType + watchCity.Ref}
                   typeOfWarehouseRef={watchWarehouseType}
                   cityRef={watchCity.Ref}
                   error={error}
