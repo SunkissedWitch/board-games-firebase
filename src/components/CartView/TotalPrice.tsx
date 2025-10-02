@@ -1,14 +1,15 @@
 import { formattedPrice } from "../../utils/helpers";
+import type { AddressInputsProps } from "./AddressForm";
 
 type TotalPriceProps = {
   totalPrice: number;
   totalItems: number;
+  delivery: AddressInputsProps | null
+  paymentMethod: string
 };
 
-export const TotalPrice = ({ totalPrice, totalItems }: TotalPriceProps) => {
+export const TotalPrice = ({ totalPrice, totalItems, delivery, paymentMethod }: TotalPriceProps) => {
   const formattedTotalPrice = formattedPrice(totalPrice);
-  const details = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique, mauris eget maximus dapibus, purus ipsum finibus nibh, id ornare urna dui eu sapien. Etiam eu elit justo. '
-  const shipmentDetails = 'Morbi pellentesque nulla a lacinia iaculis. Suspendisse egestas imperdiet odio vel sollicitudin. Integer volutpat porttitor tempus.'
 
   return (
     <div className="flex flex-col gap-5">
@@ -27,13 +28,26 @@ export const TotalPrice = ({ totalPrice, totalItems }: TotalPriceProps) => {
           <b>{formattedTotalPrice}</b>
         </div>
       </div>
-      <div>
+      <div className="*:not-first:px-3">
         <div className='text-lg font-medium leading-loose'>Details:</div>
-        <div className='px-8 text-justify'>{details}</div>
+        {/* TODO: handle payment methods */}
+        <div>payment - {paymentMethod}</div>
       </div>
-      <div>
+      <div className="*:not-first:px-3">
         <div className='text-lg font-medium leading-loose'>Shipment Details:</div>
-        <div className='px-8 text-justify'>{shipmentDetails}</div>
+        {delivery && (
+          <>
+            <div>
+              {delivery.username}
+            </div>
+            <div className='tabular-nums'>
+              tel: {delivery.tel}
+            </div>
+          <div className='text-balance'>
+            {delivery.warehouse.CityDescription}, <br /> {delivery.warehouse.Description}
+          </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ export const CartView = ({ products }: CartViewProps) => {
         {/* TODO: add payment method */}
       </div>
       <div className='card card-border shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-accent/30'>
-        <TotalPrice totalPrice={totalPrice} totalItems={totalItems} />
+        <TotalPrice totalPrice={totalPrice} totalItems={totalItems} delivery={delivery} paymentMethod="Credit Card" />
         <div className='grid grid-cols-2 gap-10 px-5 py-2.5'>
           <button
             className='btn btn-primary col-span-full sm:col-span-1 lg:col-span-full sm:col-start-2 lg:col-start-0'
