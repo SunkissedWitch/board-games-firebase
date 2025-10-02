@@ -2,7 +2,7 @@ import { type DocumentData, Timestamp } from 'firebase/firestore'
 import { OrderCardHeader } from './OrderCardHeader'
 import { OrderListItem } from './OrderListItem'
 import { getTotalItemPrice, getTotalPrice } from '../../utils/helpers'
-import { POST_SERVICES } from '../../utils/constants'
+import type { DeliveryProps } from '../CartView/AddressForm'
 
 type OrderProps = {
   order: DocumentData
@@ -22,15 +22,8 @@ type OrderDataProps = {
   quantity: number
 }
 
-export type DeliveryDataProps = {
-  username: string
-  address: string
-  city: string
-  courierServise: keyof typeof POST_SERVICES
-  postCode?: string
-  postOffice?: string
+export interface DeliveryDataProps extends DeliveryProps {
   shippingCoast?: number | 'free'
-  tel: string
 }
 
 export interface IOrder {

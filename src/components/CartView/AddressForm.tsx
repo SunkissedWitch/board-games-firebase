@@ -1,177 +1,195 @@
-import { useForm } from "react-hook-form";
-import { TextInput } from "../TextInput";
+import { Controller, useForm, useWatch } from "react-hook-form"
+import { TextInput } from "../TextInput"
 import { addressRules } from "../../utils/formRules"
-import { POST_SERVICES } from "../../utils/constants";
-import { entries, head, keys } from "lodash";
+import { CitySelect } from "./CitySelect"
+import { WarehouseTypeSelect } from "./WarehouseTypeSelect"
+import { WarehouseSelect } from "./WarehouseSelect"
+import { useEffect } from "react"
 
-export type AddressInputsProps = {
-  city: string
-  address: string
+export type DeliveryProps = {
+  city: {
+    Ref: CityProps["Ref"]
+    Description: CityProps["Description"]
+  } | null
+  warehouse: Omit<WarehouseProps, "ShortAddress">
   tel: string
-  courierServise: string
-  postCode?: string
-  postOffice?: string
   username: string
+}
+export type CityProps = {
+  Ref: string
+  SettlementType: string
+  Description: string
+  SettlementTypeDescription: string
+  Region: string
+  RegionsDescription: string
+  AreaDescription: string
+}
+export type WarehouseProps = {
+  Description: string
+  ShortAddress: string
+  Ref: string
+  CityDescription: string
+  CityRef: string
+}
+
+export type WarehouseTypeProps = {
+  Ref: string
+  Description: string
 }
 
 type onSubmitProp = {
-  onSubmit: (_props: AddressInputsProps) => void
+  onSubmit: (_props: DeliveryProps) => void
+}
+
+type FormProps = {
+  city: CityProps | null
+  warehouseType: WarehouseTypeProps["Ref"] | null
+  warehouseRef: WarehouseProps | null
+  address: string
+  tel: string
+  username: string
 }
 
 export const AddressForm = ({ onSubmit }: onSubmitProp) => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
-  } = useForm({
+    resetField
+  } = useForm<FormProps>({
     defaultValues: {
-      city: "",
-      address: "",
+      city: null,
+      warehouseType: null,
+      warehouseRef: null,
       tel: "",
-      courierServise: head(keys(POST_SERVICES)) || 'nova_poshta',
-      postCode: "",
-      postOffice: "",
       username: "",
     },
-  });
+  })
 
-  const watchService = watch('courierServise')
+  const watchCity = useWatch({
+    name: "city",
+    control,
+  })
 
-  console.log('[errors]', errors)
+  const watchWarehouseType = useWatch({
+    name: "warehouseType",
+    control,
+  })
+
+  const handleSubmitValues = (values: FormProps) => {
+    if (!values.warehouseRef || !values.city) {
+      return
+    }
+
+    const deliveryDetails = {
+      city: {
+        Ref: values.city.Ref,
+        Description: values.city.Description,
+      },
+      warehouse: {
+        Description: values.warehouseRef.Description,
+        Ref: values.warehouseRef.Ref,
+        CityDescription: values.warehouseRef.CityDescription,
+        CityRef: values.warehouseRef.CityRef,
+      },
+      tel: values.tel,
+      username: values.username,
+    }
+    onSubmit(deliveryDetails)
+  }
+
+  useEffect(() => {
+    if (!watchCity || !watchWarehouseType) return
+    resetField('warehouseRef')
+  }, [watchCity?.Ref, watchWarehouseType])
+
   return (
-    <div className='card card-border shadow-lg'>
+    <div className='card card-border shadow-lg @container/form-body'>
       <div className='card-title p-5'>Deliver to:</div>
-      <form className='card-body' onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid md:grid-cols-2 gap-x-10 gap-y-2.5">
-        <fieldset className='fieldset'>
-          <label htmlFor='city' className='label'>
-            City
-          </label>
-          <TextInput id='city' {...register("city", addressRules.city)} placeholder='City' />
-          {errors?.city && (
-            <label htmlFor='city' className='label text-xs text-error'>
-              {errors?.city?.message}
+      <form className='card-body' onSubmit={handleSubmit(handleSubmitValues)}>
+        <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 gap-y-2.5'>
+          <fieldset className='fieldset'>
+            <label htmlFor='tel' className='label'>
+              Phone number
             </label>
-          )}
-        </fieldset>
+            <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
+            {errors?.tel && (
+              <label htmlFor='tel' className='label text-xs text-error'>
+                {errors?.tel?.message}
+              </label>
+            )}
+          </fieldset>
+          <fieldset className='fieldset'>
+            <label htmlFor='username' className='label'>
+              Who will receive it?
+            </label>
+            <TextInput
+              id='username'
+              {...register("username", addressRules.username)}
+              placeholder='John Doe'
+              autoComplete='name'
+            />
+            {errors?.username && (
+              <label htmlFor='username' className='label text-xs text-error'>
+                {errors?.username?.message}
+              </label>
+            )}
+          </fieldset>
 
-        <fieldset className='fieldset md:row-span-3 flex flex-col'>
-          <label htmlFor='address' className='label'>
-            Address
-          </label>
-          <textarea
-            id='address'
-            rows={1}
-            className='textarea min-h-24 w-full textarea-bordered h-full! self-stretch'
-            {...register("address", addressRules.address)}
-            placeholder='Address'
-            autoComplete='on'
+          <fieldset className='fieldset'>
+            <label htmlFor='warehouseType' className='label'>
+              Warehouse Type
+            </label>
+            <Controller
+              name='warehouseType'
+              rules={addressRules.warehouseType}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <WarehouseTypeSelect id='warehouseType' {...field} />
+                  {error && error.message && (
+                    <label htmlFor='warehouseType' className='label text-xs text-error'>
+                      {error?.message}
+                    </label>
+                  )}
+                </>
+              )}
+            />
+          </fieldset>
+          <Controller
+            name='city'
+            control={control}
+            rules={addressRules.city}
+            render={({ field, fieldState: { error } }) => <CitySelect {...field} error={error} />}
           />
-          {errors?.address && (
-            <label htmlFor='address' className='label text-xs text-error'>
-              {errors?.address?.message}
-            </label>
+          {watchCity && watchCity.Ref && watchWarehouseType && (
+            <Controller
+              name='warehouseRef'
+              control={control}
+              rules={addressRules.warehouseRef}
+              render={({ field, fieldState: { error } }) => (
+                <WarehouseSelect
+                  {...field}
+                  key={watchWarehouseType + watchCity.Ref}
+                  typeOfWarehouseRef={watchWarehouseType}
+                  cityRef={watchCity.Ref}
+                  error={error}
+                />
+              )}
+            />
           )}
-        </fieldset>
-
-        <fieldset className='fieldset'>
-          <label htmlFor='tel' className='label'>
-            Phone number
-          </label>
-          <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
-          {errors?.tel && (
-            <label htmlFor='tel' className='label text-xs text-error'>
-              {errors?.tel?.message}
-            </label>
-          )}
-        </fieldset>
-
-        <fieldset className='fieldset'>
-          <label htmlFor='courierServise' className='label'>
-            Choose a courier service
-          </label>
-          <select
-            id='courierServise'
-            {...register("courierServise", addressRules.courierServise)}
-            className='select w-full'
+        </div>
+        <div className='w-full h-px bg-current/10 my-4 flex-none' />
+        <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 place-items-end'>
+          <button
+            className='btn btn-primary btn-outline w-full @min-lg/form-body:col-start-2 @min-3xl/form-body:btn-wide'
+            type='submit'
           >
-            {entries(POST_SERVICES).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value}
-              </option>
-            ))}
-          </select>
-          {errors?.courierServise && (
-            <label htmlFor='courierServise' className='label text-xs text-error'>
-              {errors?.courierServise?.message}
-            </label>
-          )}
-        </fieldset>
-
-        {watchService === "ukr_poshta" && (
-          <fieldset className='fieldset'>
-            <label htmlFor='postCode' className='label'>
-              Post Code
-            </label>
-            <TextInput
-              id='postCode'
-              {...register("postCode", addressRules.postCode)}
-              placeholder='69000'
-              autoComplete='postal-code'
-            />
-            {errors?.postCode && (
-              <label htmlFor='postCode' className='label text-xs text-error'>
-                {errors?.postCode?.message}
-              </label>
-            )}
-          </fieldset>
-        )}
-
-        {watchService === "nova_poshta" && (
-          <fieldset className='fieldset'>
-            <label htmlFor='postOffice' className='label'>
-              Post office
-            </label>
-            <TextInput
-              id='postOffice'
-              {...register("postOffice", addressRules.postOffice)}
-              placeholder='#20'
-              autoComplete='shipping address-level3'
-            />
-
-            {errors?.postOffice && (
-              <label htmlFor='postOffice' className='label text-xs text-error'>
-                {errors?.postOffice?.message}
-              </label>
-            )}
-          </fieldset>
-        )}
-
-        <fieldset className='fieldset'>
-          <label htmlFor='username' className='label'>
-            Who will receive it?
-          </label>
-          <TextInput
-            id='username'
-            {...register("username", addressRules.username)}
-            placeholder='John Doe'
-            autoComplete='name'
-          />
-          {errors?.username && (
-            <label htmlFor='username' className='label text-xs text-error'>
-              {errors?.username?.message}
-            </label>
-          )}
-        </fieldset>
-        <div className="md:col-span-2 grid grid-cols-subgrid">
-          <button className='btn btn-primary btn-outline md:col-start-2' type='submit'>
             Next step
           </button>
         </div>
-        </div>
-
       </form>
     </div>
   )
-};
+}
