@@ -3,7 +3,7 @@ import { CartItem } from "./CartItem"
 import { TotalPrice } from "./TotalPrice"
 import { forEach, get } from "lodash"
 import { useState } from "react"
-import { AddressForm, type AddressInputsProps } from "./AddressForm"
+import { AddressForm, type DeliveryProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
 import { useNavigate } from "react-router"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
@@ -21,7 +21,7 @@ export const CartView = ({ products }: CartViewProps) => {
   const clearCart = useCartStore((state) => state.clearCart)
 
   const [isSubmited, setIsSubmited] = useState(false)
-  const [delivery, setDelivery] = useState<AddressInputsProps | null>(null)
+  const [delivery, setDelivery] = useState<DeliveryProps | null>(null)
   const navigate = useNavigate()
 
   const getTotalPrice = () => {
@@ -35,7 +35,7 @@ export const CartView = ({ products }: CartViewProps) => {
     return getTotalPriceUtil(totalArray)
   }
 
-  const onSubmitAddress = (values: AddressInputsProps) => {
+  const onSubmitAddress = (values: DeliveryProps) => {
     setDelivery(values)
     setIsSubmited(true)
   }

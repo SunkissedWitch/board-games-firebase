@@ -6,7 +6,7 @@ import { WarehouseTypeSelect } from "./WarehouseTypeSelect"
 import { WarehouseSelect } from "./WarehouseSelect"
 import { useEffect } from "react"
 
-export type AddressInputsProps = {
+export type DeliveryProps = {
   city: {
     Ref: CityProps["Ref"]
     Description: CityProps["Description"]
@@ -38,7 +38,7 @@ export type WarehouseTypeProps = {
 }
 
 type onSubmitProp = {
-  onSubmit: (_props: AddressInputsProps) => void
+  onSubmit: (_props: DeliveryProps) => void
 }
 
 type FormProps = {
@@ -47,8 +47,6 @@ type FormProps = {
   warehouseRef: WarehouseProps | null
   address: string
   tel: string
-  postCode: string
-  postOffice: string
   username: string
 }
 
@@ -65,8 +63,6 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
       warehouseType: null,
       warehouseRef: null,
       tel: "",
-      postCode: "",
-      postOffice: "",
       username: "",
     },
   })
@@ -147,9 +143,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
             </label>
             <Controller
               name='warehouseType'
-              rules={{
-                required: "Select warehouse type",
-              }}
+              rules={addressRules.warehouseType}
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <>
@@ -166,18 +160,14 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
           <Controller
             name='city'
             control={control}
-            rules={{
-              required: "Select city",
-            }}
+            rules={addressRules.city}
             render={({ field, fieldState: { error } }) => <CitySelect {...field} error={error} />}
           />
           {watchCity && watchCity.Ref && watchWarehouseType && (
             <Controller
               name='warehouseRef'
               control={control}
-              rules={{
-                required: "Select warehouse",
-              }}
+              rules={addressRules.warehouseRef}
               render={({ field, fieldState: { error } }) => (
                 <WarehouseSelect
                   {...field}

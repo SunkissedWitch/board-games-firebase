@@ -1,10 +1,10 @@
 import { formattedPrice } from "../../utils/helpers";
-import type { AddressInputsProps } from "./AddressForm";
+import type { DeliveryProps } from "./AddressForm";
 
 type TotalPriceProps = {
   totalPrice: number;
   totalItems: number;
-  delivery: AddressInputsProps | null
+  delivery: DeliveryProps | null
   paymentMethod: string
 };
 

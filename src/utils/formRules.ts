@@ -11,7 +11,7 @@ const emailRule = {
 
 const addressRules = {
   city: {
-    required: 'Enter your city name'
+    required: "Select city",
   },
   address: {
     required: 'Enter your address',
@@ -20,14 +20,11 @@ const addressRules = {
   tel: {
     required: 'Enter your phone number'
   },
-  courierServise: {
-    required: 'Choose courier servise'
+  warehouseType: {
+    required: "Select warehouse type",
   },
-  postCode: {
-    required: 'Post code is required'
-  },
-  postOffice: {
-    required: 'Enter post office number'
+  warehouseRef: {
+    required: "Select warehouse"
   },
   username: {
     required: "Enter the recipient's name"
