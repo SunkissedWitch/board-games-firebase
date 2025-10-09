@@ -5,6 +5,7 @@ import { CitySelect } from "./CitySelect"
 import { WarehouseTypeSelect } from "./WarehouseTypeSelect"
 import { WarehouseSelect } from "./WarehouseSelect"
 import { useEffect } from "react"
+import { Divider } from "../DIvider"
 
 export type DeliveryProps = {
   city: {
@@ -180,7 +181,7 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
             />
           )}
         </div>
-        <div className='w-full h-px bg-current/10 my-4 flex-none' />
+        <Divider />
         <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 place-items-end'>
           <button
             className='btn btn-primary btn-outline w-full @min-lg/form-body:col-start-2 @min-3xl/form-body:btn-wide'

@@ -31,6 +31,15 @@ export const createPayment = onRequest({ secrets: ["WAYFORPAY_SECRET_KEY"] }, as
       productPrice [0], productPrice [1], ..., productPrice [n]
       розділених ";" (крапка з комою) в кодуванні UTF-8
 */
+  const now = new Date()
+  const signatureSourceObject = {
+    merchantAccount: merchantAccount_test,
+    merchantDomainName: "www.market.ua",
+    orderReference,
+    orderDate: now.getTime(),
+    amount,
+    currency,
+  }
 
   const signatureSource = `${orderReference};${amount};${currency}`
   const signature = crypto.createHmac("md5", secretKey).update(signatureSource).digest("hex")

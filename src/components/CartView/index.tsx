@@ -9,6 +9,8 @@ import { useNavigate } from "react-router"
 import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
 import { useAuthStore } from "../../contexts/AuthStore"
 import { useCartStore } from "../../contexts/CartStore"
+import { SelectPaymentMethod } from "./SelectPaymentMethod"
+import { PAYMENT_OPTIONS } from "../../utils/constants"
 
 interface CartViewProps {
   products: DocumentData[]
@@ -19,6 +21,7 @@ export const CartView = ({ products }: CartViewProps) => {
   const totalItems = useCartStore((state) => state.totalItems)
   const cartState = useCartStore((state) => state.products)
   const clearCart = useCartStore((state) => state.clearCart)
+  const [paymentMethod, setPaymentMethod] = useState<string>(Object.keys(PAYMENT_OPTIONS)[0])
 
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<DeliveryProps | null>(null)
@@ -39,6 +42,11 @@ export const CartView = ({ products }: CartViewProps) => {
     setDelivery(values)
     setIsSubmited(true)
   }
+
+  const onSelectPayment = (selectedPaymentMethod: string) => {
+    setPaymentMethod(selectedPaymentMethod)
+  }
+  const paymentMethodString = PAYMENT_OPTIONS?.[paymentMethod as keyof typeof PAYMENT_OPTIONS] || ''
 
   const createOrder = async () => {
     const docData = {
@@ -79,10 +87,10 @@ export const CartView = ({ products }: CartViewProps) => {
           return <CartItem key={product.productId} product={product} />
         })}
         <AddressForm onSubmit={onSubmitAddress} />
-        {/* TODO: add payment method */}
+        <SelectPaymentMethod onSelectPayment={onSelectPayment} />
       </div>
       <div className='card card-border shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-accent/30'>
-        <TotalPrice totalPrice={totalPrice} totalItems={totalItems} delivery={delivery} paymentMethod="Credit Card" />
+        <TotalPrice totalPrice={totalPrice} totalItems={totalItems} delivery={delivery} paymentMethod={paymentMethodString} />
         <div className='grid grid-cols-2 gap-10 px-5 py-2.5'>
           <button
             className='btn btn-primary col-span-full sm:col-span-1 lg:col-span-full sm:col-start-2 lg:col-start-0'
