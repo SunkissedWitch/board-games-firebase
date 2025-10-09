@@ -15,6 +15,7 @@ import { PAYMENT_OPTIONS } from "../../utils/constants"
 interface CartViewProps {
   products: DocumentData[]
 }
+const STEPS = ['delivery','payment','confirmation']
 
 export const CartView = ({ products }: CartViewProps) => {
   const currentUser = useAuthStore((state) => state.currentUser)
@@ -22,6 +23,7 @@ export const CartView = ({ products }: CartViewProps) => {
   const cartState = useCartStore((state) => state.products)
   const clearCart = useCartStore((state) => state.clearCart)
   const [paymentMethod, setPaymentMethod] = useState<string>(Object.keys(PAYMENT_OPTIONS)[0])
+  const [currentStep, setCurrentStep] = useState<string>(STEPS[0]) // TODO: disable changes on other steps
 
   const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<DeliveryProps | null>(null)
@@ -41,17 +43,31 @@ export const CartView = ({ products }: CartViewProps) => {
   const onSubmitAddress = (values: DeliveryProps) => {
     setDelivery(values)
     setIsSubmited(true)
+    setCurrentStep('payment')
   }
 
   const onSelectPayment = (selectedPaymentMethod: string) => {
     setPaymentMethod(selectedPaymentMethod)
+    setCurrentStep('confirmation')
   }
   const paymentMethodString = PAYMENT_OPTIONS?.[paymentMethod as keyof typeof PAYMENT_OPTIONS] || ''
+/*
+  Payment Status:
+  - pending               - Замовлення створене, оплата ще не здійснена
+  - success               - Оплата успішно проведена
+  - refunded              - Оплату повернуто / скасовано
+  - failed                - Помилка оплати (вимагає ручного втручання)
+  - verification_required - Потрібна перевірка менеджером (наприклад, якщо користувач завантажив чек або є підозра на шахрайство)
+*/
 
   const createOrder = async () => {
     const docData = {
       orderData: cartState,
       deliveryData: delivery,
+      paymentData: {
+        paymentMethod: paymentMethod,
+        paymenStatus: 'pending'
+      },
       userUID: currentUser?.uid,
       createdAt: serverTimestamp()
     }
