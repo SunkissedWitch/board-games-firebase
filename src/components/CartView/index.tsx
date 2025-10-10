@@ -6,7 +6,7 @@ import { useState } from "react"
 import { AddressForm, type DeliveryProps } from "./AddressForm"
 import { ordersRef } from "../../utils/collectionRefferences"
 import { useNavigate } from "react-router"
-import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from '../../utils/helpers'
+import { getTotalItemPrice, getTotalPrice as getTotalPriceUtil } from "../../utils/helpers"
 import { useAuthStore } from "../../contexts/AuthStore"
 import { useCartStore } from "../../contexts/CartStore"
 import { SelectPaymentMethod } from "./SelectPaymentMethod"
@@ -15,14 +15,15 @@ import { PAYMENT_OPTIONS } from "../../utils/constants"
 interface CartViewProps {
   products: DocumentData[]
 }
-const STEPS = ['delivery','payment','confirmation']
+const STEPS = ["delivery", "payment", "confirmation"]
+export type PaymentMethodType = keyof typeof PAYMENT_OPTIONS
 
 export const CartView = ({ products }: CartViewProps) => {
   const currentUser = useAuthStore((state) => state.currentUser)
   const totalItems = useCartStore((state) => state.totalItems)
   const cartState = useCartStore((state) => state.products)
   const clearCart = useCartStore((state) => state.clearCart)
-  const [paymentMethod, setPaymentMethod] = useState<string>(Object.keys(PAYMENT_OPTIONS)[0])
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>(Object.keys(PAYMENT_OPTIONS)[0] as keyof typeof PAYMENT_OPTIONS)
   const [currentStep, setCurrentStep] = useState<string>(STEPS[0]) // TODO: disable changes on other steps
 
   const [isSubmited, setIsSubmited] = useState(false)
@@ -43,14 +44,14 @@ export const CartView = ({ products }: CartViewProps) => {
   const onSubmitAddress = (values: DeliveryProps) => {
     setDelivery(values)
     setIsSubmited(true)
-    setCurrentStep('payment')
+    setCurrentStep("payment")
   }
 
-  const onSelectPayment = (selectedPaymentMethod: string) => {
+  const onSelectPayment = (selectedPaymentMethod: PaymentMethodType) => {
     setPaymentMethod(selectedPaymentMethod)
-    setCurrentStep('confirmation')
+    setCurrentStep("confirmation")
   }
-  const paymentMethodString = PAYMENT_OPTIONS?.[paymentMethod as keyof typeof PAYMENT_OPTIONS] || ''
+  const paymentMethodString = PAYMENT_OPTIONS?.[paymentMethod] || ""
 /*
   Payment Status:
   - pending               - Замовлення створене, оплата ще не здійснена
@@ -81,7 +82,6 @@ export const CartView = ({ products }: CartViewProps) => {
     } catch (error) {
       console.log('error', error)
     }
-
   }
 
   const totalPrice = getTotalPrice()
@@ -98,15 +98,32 @@ export const CartView = ({ products }: CartViewProps) => {
     <div className='px-2.5 sm:px-5 py-5 container mx-auto grid grid-cols-3 gap-5 items-start'>
       <div className='flex flex-col gap-2.5 lg:gap-5 grow col-span-full lg:col-span-2'>
         <div className='text-xl font-bold px-2.5'>Your order:</div>
-        <button type='button' className='btn btn-outline btn-sm w-32 ms-auto' onClick={clearCart}>Clear cart</button>
+        <button type='button' className='btn btn-outline btn-sm w-32 ms-auto' onClick={clearCart}>
+          Clear cart
+        </button>
         {products.map((product: DocumentData) => {
           return <CartItem key={product.productId} product={product} />
         })}
-        <AddressForm onSubmit={onSubmitAddress} />
-        <SelectPaymentMethod onSelectPayment={onSelectPayment} />
+        <AddressForm
+          data={delivery}
+          onSubmit={onSubmitAddress}
+          isCurrentStep={currentStep === "delivery"}
+          onEdit={() => setCurrentStep("delivery")}
+        />
+        <SelectPaymentMethod
+          paymentMethod={paymentMethod}
+          onSelectPayment={onSelectPayment}
+          isCurrentStep={currentStep === "payment"}
+          onEdit={() => setCurrentStep("payment")}
+        />
       </div>
       <div className='card card-border shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-accent/30'>
-        <TotalPrice totalPrice={totalPrice} totalItems={totalItems} delivery={delivery} paymentMethod={paymentMethodString} />
+        <TotalPrice
+          totalPrice={totalPrice}
+          totalItems={totalItems}
+          delivery={delivery}
+          paymentMethod={paymentMethodString}
+        />
         <div className='grid grid-cols-2 gap-10 px-5 py-2.5'>
           <button
             className='btn btn-primary col-span-full sm:col-span-1 lg:col-span-full sm:col-start-2 lg:col-start-0'

@@ -5,14 +5,15 @@ import { CitySelect } from "./CitySelect"
 import { WarehouseTypeSelect } from "./WarehouseTypeSelect"
 import { WarehouseSelect } from "./WarehouseSelect"
 import { useEffect } from "react"
-import { Divider } from "../DIvider"
+import { Divider } from "../Divider"
+import { PencilSquareIcon } from "@heroicons/react/24/outline"
 
 export type DeliveryProps = {
   city: {
     Ref: CityProps["Ref"]
     Description: CityProps["Description"]
   } | null
-  warehouse: Omit<WarehouseProps, "ShortAddress">
+  warehouse: Omit<WarehouseProps, "ShortAddress"> | null
   tel: string
   username: string
 }
@@ -40,6 +41,9 @@ export type WarehouseTypeProps = {
 
 type onSubmitProp = {
   onSubmit: (_props: DeliveryProps) => void
+  isCurrentStep: boolean
+  onEdit: () => void
+  data: DeliveryProps | null
 }
 
 type FormProps = {
@@ -51,7 +55,7 @@ type FormProps = {
   username: string
 }
 
-export const AddressForm = ({ onSubmit }: onSubmitProp) => {
+export const AddressForm = ({ onSubmit, isCurrentStep, onEdit, data }: onSubmitProp) => {
   const {
     register,
     handleSubmit,
@@ -107,90 +111,107 @@ export const AddressForm = ({ onSubmit }: onSubmitProp) => {
 
   return (
     <div className='card card-border shadow-lg @container/form-body'>
-      <div className='card-title p-5'>Deliver to:</div>
-      <form className='card-body' onSubmit={handleSubmit(handleSubmitValues)}>
-        <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 gap-y-2.5'>
-          <fieldset className='fieldset'>
-            <label htmlFor='tel' className='label'>
-              Phone number
-            </label>
-            <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
-            {errors?.tel && (
-              <label htmlFor='tel' className='label text-xs text-error'>
-                {errors?.tel?.message}
+      <div className='card-title justify-between p-5'>Deliver to:
+        {!isCurrentStep && <button className='btn btn-ghost btn-square' onClick={onEdit} title="Edit">
+          <PencilSquareIcon className='w-5 h-5' />
+        </button>}
+      </div>
+      {isCurrentStep ? (
+        <form className='card-body' onSubmit={handleSubmit(handleSubmitValues)}>
+          <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 gap-y-2.5'>
+            <fieldset className='fieldset'>
+              <label htmlFor='tel' className='label'>
+                Phone number
               </label>
-            )}
-          </fieldset>
-          <fieldset className='fieldset'>
-            <label htmlFor='username' className='label'>
-              Who will receive it?
-            </label>
-            <TextInput
-              id='username'
-              {...register("username", addressRules.username)}
-              placeholder='John Doe'
-              autoComplete='name'
-            />
-            {errors?.username && (
-              <label htmlFor='username' className='label text-xs text-error'>
-                {errors?.username?.message}
+              <TextInput id='tel' {...register("tel", addressRules.tel)} placeholder='Phone number' type='tel' />
+              {errors?.tel && (
+                <label htmlFor='tel' className='label text-xs text-error'>
+                  {errors?.tel?.message}
+                </label>
+              )}
+            </fieldset>
+            <fieldset className='fieldset'>
+              <label htmlFor='username' className='label'>
+                Who will receive it?
               </label>
-            )}
-          </fieldset>
+              <TextInput
+                id='username'
+                {...register("username", addressRules.username)}
+                placeholder='John Doe'
+                autoComplete='name'
+              />
+              {errors?.username && (
+                <label htmlFor='username' className='label text-xs text-error'>
+                  {errors?.username?.message}
+                </label>
+              )}
+            </fieldset>
 
-          <fieldset className='fieldset'>
-            <label htmlFor='warehouseType' className='label'>
-              Warehouse Type
-            </label>
+            <fieldset className='fieldset'>
+              <label htmlFor='warehouseType' className='label'>
+                Warehouse Type
+              </label>
+              <Controller
+                name='warehouseType'
+                rules={addressRules.warehouseType}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <>
+                    <WarehouseTypeSelect id='warehouseType' {...field} />
+                    {error && error.message && (
+                      <label htmlFor='warehouseType' className='label text-xs text-error'>
+                        {error?.message}
+                      </label>
+                    )}
+                  </>
+                )}
+              />
+            </fieldset>
             <Controller
-              name='warehouseType'
-              rules={addressRules.warehouseType}
+              name='city'
               control={control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <WarehouseTypeSelect id='warehouseType' {...field} />
-                  {error && error.message && (
-                    <label htmlFor='warehouseType' className='label text-xs text-error'>
-                      {error?.message}
-                    </label>
-                  )}
-                </>
-              )}
+              rules={addressRules.city}
+              render={({ field, fieldState: { error } }) => <CitySelect {...field} error={error} />}
             />
-          </fieldset>
-          <Controller
-            name='city'
-            control={control}
-            rules={addressRules.city}
-            render={({ field, fieldState: { error } }) => <CitySelect {...field} error={error} />}
-          />
-          {watchCity && watchCity.Ref && watchWarehouseType && (
-            <Controller
-              name='warehouseRef'
-              control={control}
-              rules={addressRules.warehouseRef}
-              render={({ field, fieldState: { error } }) => (
-                <WarehouseSelect
-                  {...field}
-                  key={watchWarehouseType + watchCity.Ref}
-                  typeOfWarehouseRef={watchWarehouseType}
-                  cityRef={watchCity.Ref}
-                  error={error}
-                />
-              )}
-            />
+            {watchCity && watchCity.Ref && watchWarehouseType && (
+              <Controller
+                name='warehouseRef'
+                control={control}
+                rules={addressRules.warehouseRef}
+                render={({ field, fieldState: { error } }) => (
+                  <WarehouseSelect
+                    {...field}
+                    key={watchWarehouseType + watchCity.Ref}
+                    typeOfWarehouseRef={watchWarehouseType}
+                    cityRef={watchCity.Ref}
+                    error={error}
+                  />
+                )}
+              />
+            )}
+          </div>
+          <Divider />
+          <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 place-items-end'>
+            <button
+              className='btn btn-primary btn-outline w-full @min-lg/form-body:col-start-2 @min-3xl/form-body:btn-wide'
+              type='submit'
+            >
+              Next step
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div className='card-body'>
+          {data && (
+            <ul className='grid gap-3'>
+              <li>{data.username}</li>
+              <li>{data.tel}</li>
+              <li>{data.city?.Description}</li>
+              <li>{data.warehouse?.Description}</li>
+            </ul>
           )}
         </div>
-        <Divider />
-        <div className='grid @min-lg/form-body:grid-cols-2 gap-x-5 place-items-end'>
-          <button
-            className='btn btn-primary btn-outline w-full @min-lg/form-body:col-start-2 @min-3xl/form-body:btn-wide'
-            type='submit'
-          >
-            Next step
-          </button>
-        </div>
-      </form>
+      )}
     </div>
   )
 }

@@ -1,8 +1,8 @@
-import { type DocumentData, Timestamp } from 'firebase/firestore'
-import { OrderCardHeader } from './OrderCardHeader'
-import { OrderListItem } from './OrderListItem'
-import { getTotalItemPrice, getTotalPrice } from '../../utils/helpers'
-import type { DeliveryProps } from '../CartView/AddressForm'
+import { type DocumentData, Timestamp } from "firebase/firestore"
+import { OrderCardHeader } from "./OrderCardHeader"
+import { OrderListItem } from "./OrderListItem"
+import { getTotalItemPrice, getTotalPrice } from "../../utils/helpers"
+import type { DeliveryProps } from "../CartView/AddressForm"
 
 type OrderProps = {
   order: DocumentData
@@ -23,7 +23,7 @@ type OrderDataProps = {
 }
 
 export interface DeliveryDataProps extends DeliveryProps {
-  shippingCoast?: number | 'free'
+  shippingCoast?: number | "free"
 }
 
 export interface IOrder {
@@ -49,11 +49,7 @@ export const OrderCard = ({ order }: OrderProps) => {
       />
       <div className='card-body divide-y gap-0 p-0 px-2.5'>
         {orderData?.map(({ productId, productData, quantity }) => (
-          <OrderListItem
-            key={productId}
-            data={productData}
-            quantity={quantity}
-          />
+          <OrderListItem key={productId} data={productData} quantity={quantity} />
         ))}
       </div>
     </div>
