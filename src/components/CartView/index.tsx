@@ -11,6 +11,7 @@ import { useAuthStore } from "../../contexts/AuthStore"
 import { useCartStore } from "../../contexts/CartStore"
 import { SelectPaymentMethod } from "./SelectPaymentMethod"
 import { PAYMENT_OPTIONS } from "../../utils/constants"
+import { doOnlinePayment } from "./doOnlinePayment"
 
 interface CartViewProps {
   products: DocumentData[]
@@ -24,9 +25,8 @@ export const CartView = ({ products }: CartViewProps) => {
   const cartState = useCartStore((state) => state.products)
   const clearCart = useCartStore((state) => state.clearCart)
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>(Object.keys(PAYMENT_OPTIONS)[0] as keyof typeof PAYMENT_OPTIONS)
-  const [currentStep, setCurrentStep] = useState<string>(STEPS[0]) // TODO: disable changes on other steps
+  const [currentStep, setCurrentStep] = useState<string>(STEPS[0])
 
-  const [isSubmited, setIsSubmited] = useState(false)
   const [delivery, setDelivery] = useState<DeliveryProps | null>(null)
   const navigate = useNavigate()
 
@@ -43,7 +43,6 @@ export const CartView = ({ products }: CartViewProps) => {
 
   const onSubmitAddress = (values: DeliveryProps) => {
     setDelivery(values)
-    setIsSubmited(true)
     setCurrentStep("payment")
   }
 
@@ -77,6 +76,10 @@ export const CartView = ({ products }: CartViewProps) => {
       const create = await addDoc(ordersRef, docData)
       if (create?.id) {
         clearCart()
+        if (paymentMethod === 'online_payment') {
+          doOnlinePayment(create.id, docData.orderData)
+          return
+        }
         navigate(`/cart/success/${create?.id}`)
       }
     } catch (error) {
@@ -95,8 +98,7 @@ export const CartView = ({ products }: CartViewProps) => {
   }
 
   return (
-    <div className='px-2.5 sm:px-5 py-5 container mx-auto grid grid-cols-3 gap-5 items-start'>
-      <div className='flex flex-col gap-2.5 lg:gap-5 grow col-span-full lg:col-span-2'>
+    <div className='px-2.5 sm:px-5 py-5 container max-w-5xl mx-auto grid gap-5 items-start'>
         <div className='text-xl font-bold px-2.5'>Your order:</div>
         <button type='button' className='btn btn-outline btn-sm w-32 ms-auto' onClick={clearCart}>
           Clear cart
@@ -116,19 +118,19 @@ export const CartView = ({ products }: CartViewProps) => {
           isCurrentStep={currentStep === "payment"}
           onEdit={() => setCurrentStep("payment")}
         />
-      </div>
-      <div className='card card-border shadow-lg gap-5 p-5 col-span-full lg:col-span-1 lg:mt-12 bg-accent/30'>
+
+       <div className='card card-border shadow-lg gap-5 p-5 lg:mt-12 bg-accent/30'>
         <TotalPrice
           totalPrice={totalPrice}
           totalItems={totalItems}
           delivery={delivery}
           paymentMethod={paymentMethodString}
         />
-        <div className='grid grid-cols-2 gap-10 px-5 py-2.5'>
+        <div className='card-actions sm:justify-end'>
           <button
-            className='btn btn-primary col-span-full sm:col-span-1 lg:col-span-full sm:col-start-2 lg:col-start-0'
+            className='btn btn-primary btn-block sm:btn-wide'
             onClick={createOrder}
-            disabled={!isSubmited}
+            disabled={currentStep !== 'confirmation'}
           >
             Create order
           </button>

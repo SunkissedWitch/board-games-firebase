@@ -1,9 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https"
 import * as crypto from "crypto"
 
-const merchantAccount_test = "test_merch_n1" // test key from docs
+// const merchantAccount_test = "test_merch_n1" // test key from docs
 const merchantSecretKey_test = "flk3409refn54t54t*FNJRET" // test key from docs
-const CALLBACK_URL = "https://your-project.web.app/" // replace it with ngrok address for testing
+// const CALLBACK_URL = "https://your-project.web.app/" // replace it with ngrok address for testing
 
 export const createPayment = onRequest({ secrets: ["WAYFORPAY_SECRET_KEY"] }, async (req, res) => {
   // const { orderReference, amount, currency, productName } = req.body;
@@ -31,15 +31,15 @@ export const createPayment = onRequest({ secrets: ["WAYFORPAY_SECRET_KEY"] }, as
       productPrice [0], productPrice [1], ..., productPrice [n]
       розділених ";" (крапка з комою) в кодуванні UTF-8
 */
-  const now = new Date()
-  const signatureSourceObject = {
-    merchantAccount: merchantAccount_test,
-    merchantDomainName: "www.market.ua",
-    orderReference,
-    orderDate: now.getTime(),
-    amount,
-    currency,
-  }
+  // const now = new Date()
+  // const signatureSourceObject = {
+  //   merchantAccount: merchantAccount_test,
+  //   merchantDomainName: "www.market.ua",
+  //   orderReference,
+  //   orderDate: now.getTime(),
+  //   amount,
+  //   currency,
+  // }
 
   const signatureSource = `${orderReference};${amount};${currency}`
   const signature = crypto.createHmac("md5", secretKey).update(signatureSource).digest("hex")

@@ -29,9 +29,8 @@ export const TotalPrice = ({ totalPrice, totalItems, delivery, paymentMethod }: 
         </div>
       </div>
       <div className='*:not-first:px-3'>
-        <div className='text-lg font-medium leading-loose'>Details:</div>
-        {/* TODO: handle payment methods */}
-        <div>payment - {paymentMethod}</div>
+        <div className='text-lg font-medium leading-loose'>Payment Details:</div>
+        <div>{paymentMethod}</div>
       </div>
       <div className='*:not-first:px-3'>
         <div className='text-lg font-medium leading-loose'>Shipment Details:</div>
@@ -40,7 +39,7 @@ export const TotalPrice = ({ totalPrice, totalItems, delivery, paymentMethod }: 
             <div>{delivery.username}</div>
             <div className='tabular-nums'>tel: {delivery.tel}</div>
             <div className='text-balance'>
-              {delivery.warehouse.CityDescription}, <br /> {delivery.warehouse.Description}
+              {delivery.warehouse?.CityDescription}, <br /> {delivery.warehouse?.Description}
             </div>
           </>
         )}
