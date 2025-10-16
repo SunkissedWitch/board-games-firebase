@@ -11,10 +11,11 @@ import { getTotalItemPrice, getTotalPrice } from '../utils/helpers'
 import { forEach, get, sum } from 'lodash'
 import { ContactInfo } from '../components/OrderPage/ContactInfo'
 import { useAuthStore } from '../contexts/AuthStore'
+import { doOnlinePayment } from '../components/CartView/doOnlinePayment'
 
 export const OrderPage = () => {
   const { orderId } = useParams()
-  const [order, setOrder] = useState<IOrder>()
+  const [order, setOrder] = useState<IOrder | undefined>()
   const { currentUser } = useAuthStore()
 
   const getOrder = async () => {
@@ -23,7 +24,7 @@ export const OrderPage = () => {
       const orderSnapshot = await getDoc(orderRef)
       if (orderSnapshot.exists()) {
         // console.log('[order] Document data:', orderSnapshot.data())
-        setOrder(orderSnapshot.data())
+        setOrder(orderSnapshot.data() as IOrder)
       } else {
         // docSnap.data() will be undefined in this case
         console.log('No such document!')
@@ -39,7 +40,7 @@ export const OrderPage = () => {
   }, [])
 
   if (!order) return null
-  const { deliveryData, createdAt, orderData } = order
+  const { deliveryData, createdAt, orderData, paymentData } = order
 
   function getOrderTotalPrice () {
     let totalArray: number[] = []
@@ -72,21 +73,30 @@ export const OrderPage = () => {
   return (
     <section className='mb-5'>
       <h1 className='text-xl font-bold mb-3 py-2.5'>Details of your order</h1>
-      <div className='border rounded-box'>
-        <OrderHeader orderId={orderId || ''} placed={createdAt?.toDate().toLocaleDateString() || ''}/>
-        <div className='p-2.5 divide-y'>
+      <div className='card card-border rounded-box bg-base-200'>
+        {paymentData && (
+          <>
+            {paymentData.paymentMethod === "online_payment" && paymentData.paymenStatus === "pending" ? (
+              <button className='btn btn-sm'
+                // onClick={() => doOnlinePayment(order.orderId, orderData)}
+              >
+                Pay now
+              </button>
+            ) : (
+              <span className='badge ms-auto'>{paymentData.paymenStatus}</span>
+            )}
+          </>
+        )}
+        <OrderHeader orderId={orderId || ""} placed={createdAt?.toDate().toLocaleDateString() || ""} />
+        <div className='p-2.5 divide-y bg-base-100'>
           {orderData?.map(({ productId, productData, quantity }) => (
-            <OrderListItem
-              key={productId}
-              data={productData}
-              quantity={quantity}
-              />
+            <OrderListItem key={productId} data={productData} quantity={quantity} />
           ))}
         </div>
         <div className='flex flex-row flex-wrap-reverse gap-5 border-t bg-base-200 justify-items-stretch px-2.5'>
           <OrderSummary data={summaryData} />
           <div className='flex flex-row gap-5 flex-wrap grow'>
-            {deliveryData && <DeliveryInfo data={deliveryData}/>}
+            {deliveryData && <DeliveryInfo data={deliveryData} />}
             {contactInfoData && <ContactInfo data={contactInfoData} />}
           </div>
         </div>

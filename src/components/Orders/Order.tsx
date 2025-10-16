@@ -3,39 +3,42 @@ import { OrderCardHeader } from "./OrderCardHeader"
 import { OrderListItem } from "./OrderListItem"
 import { getTotalItemPrice, getTotalPrice } from "../../utils/helpers"
 import type { DeliveryProps } from "../CartView/AddressForm"
+import type { CartProductType } from "../../firebaseApi/CartApi"
 
 type OrderProps = {
-  order: DocumentData
+  order: DocumentData & IOrder
 }
 
-export interface IProductData {
+export interface IProductData extends DocumentData {
   category: string
   price: number
   productId: string
   title: string
-  photo: string
-}
-
-type OrderDataProps = {
-  productData: IProductData
-  productId: string
-  quantity: number
+  photo: string | string[]
+  description?: string
 }
 
 export interface DeliveryDataProps extends DeliveryProps {
   shippingCoast?: number | "free"
 }
+export interface IPaymentData {
+  paymenStatus: string
+  paymentMethod: string
+}
 
 export interface IOrder {
-  createdAt?: Timestamp
-  orderData?: OrderDataProps[]
-  deliveryData?: DeliveryDataProps
-  orderId?: string
+  createdAt: Timestamp
+  orderData: CartProductType[]
+  deliveryData: DeliveryDataProps
+  orderId: string
+  paymentData?: IPaymentData
+  userUID?: string
 }
 
 export const OrderCard = ({ order }: OrderProps) => {
-  const { createdAt, orderData, deliveryData, orderId }: IOrder = order
-  const pricesArray: number[] = orderData?.map((order: OrderDataProps) =>
+  const { createdAt, orderData, deliveryData, orderId, paymentData }: IOrder = order
+  console.log("order", order?.paymentData)
+  const pricesArray: number[] = orderData?.map((order: CartProductType) =>
     getTotalItemPrice(order.productData.price, order.quantity)
   ) as number[]
   const totalPrice = getTotalPrice(pricesArray)
@@ -46,6 +49,7 @@ export const OrderCard = ({ order }: OrderProps) => {
         createdAt={createdAt}
         totalPrice={totalPrice}
         orderNumber={orderId}
+        paymentData={paymentData}
       />
       <div className='card-body divide-y gap-0 p-0 px-2.5'>
         {orderData?.map(({ productId, productData, quantity }) => (

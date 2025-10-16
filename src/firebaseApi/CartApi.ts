@@ -11,12 +11,13 @@ import { sum, pick, get, head } from 'lodash'
 import { db } from '../firebase'
 import { useCartStore } from '../contexts/CartStore'
 import { useAuthStore } from '../contexts/AuthStore'
+import type { IProductData } from '../components/Orders/Order'
 
 // -- types and interfaces --
-export type CartProductType = {
+export interface CartProductType {
+  productReference?: DocumentReference<DocumentData, DocumentData>
+  productData: IProductData
   productId: string
-  productData: DocumentData
-  productReference: DocumentReference<DocumentData, DocumentData>
   quantity: number
 }
 

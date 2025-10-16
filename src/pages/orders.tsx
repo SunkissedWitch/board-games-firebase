@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react'
-import { getDocs, query, where, type DocumentData } from 'firebase/firestore'
+import { getDocs, query, where } from 'firebase/firestore'
 import { ordersRef } from '../utils/collectionRefferences'
-import { OrderCard } from '../components/Orders/Order'
+import { OrderCard, type IOrder } from '../components/Orders/Order'
 import { useAuthStore } from '../contexts/AuthStore'
 
 export const Orders = () => {
-  const [orders, setOrders] = useState<DocumentData[]>([])
+  const [orders, setOrders] = useState<IOrder[]>([])
   const { currentUser } = useAuthStore()
 
   const getOrders = async () => {
     try {
       const q = query(ordersRef, where('userUID', '==', currentUser?.uid))
       const querySnapshot = await getDocs(q)
-      let ordersData: DocumentData[] = []
+      let ordersData: IOrder[] = []
       querySnapshot.forEach(async (orderDoc) => {
-        ordersData.push({...orderDoc.data(), orderId: orderDoc.id })
+        ordersData.push({...orderDoc.data() as Omit<IOrder, 'orderId'>, orderId: orderDoc.id })
       })
       setOrders(ordersData)
     } catch (error) {
@@ -30,7 +30,7 @@ export const Orders = () => {
     <>
         <h1 className='text-lg font-medium leading-10'>My Orders:</h1>
         <div className='flex flex-col gap-5 py-2.5 mb-2.5'>
-          {orders?.map((order: DocumentData) => (
+          {orders?.map((order: IOrder) => (
             <OrderCard key={order?.orderId} order={order} />
           ))}
         </div>

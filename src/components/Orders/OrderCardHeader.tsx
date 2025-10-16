@@ -2,12 +2,14 @@ import { Timestamp } from 'firebase/firestore'
 import { formattedPrice } from '../../utils/helpers'
 import type { ReactNode, PropsWithChildren } from 'react'
 import { Link } from 'react-router'
+import type { IPaymentData } from './Order'
 
 export interface IOrderHeader {
   createdAt?: Timestamp
   username?: string
   totalPrice?: number
   orderNumber?: string
+  paymentData?: IPaymentData
 }
 
 interface IHeaderItemProps {
@@ -34,6 +36,7 @@ export const OrderCardHeader = ({
   username,
   totalPrice,
   orderNumber,
+  paymentData
 }: IOrderHeader) => {
   return (
     <StyledHeader>
@@ -57,9 +60,12 @@ export const OrderCardHeader = ({
             </>
           }
           subheader={
-            <Link to={`/orders/${orderNumber}`} className='ms-auto max-w-max btn btn-xs btn-link'>
-              See order
-            </Link>
+            <>
+              {paymentData && <span className='badge'>{paymentData.paymenStatus}</span>}
+              <Link to={`/orders/${orderNumber}`} className='ms-auto max-w-max btn btn-xs btn-link'>
+                See order
+              </Link>
+            </>
           }
         />
       </div>
