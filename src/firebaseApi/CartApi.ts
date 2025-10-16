@@ -31,7 +31,7 @@ export interface IMinProductData {
 
 export type NewProductToUserCartProps = {
   productId: string
-  productData: DocumentData
+  productData: CartProductType['productData']
 }
 
 // -- utils and helpers --
@@ -42,12 +42,12 @@ export const sumItems = (arrayCollection: CartProductType[]) => {
   return sum(pricesArray)
 }
 
-export const minProductData = (productData: DocumentData) =>
+export const minProductData = (productData: CartProductType['productData']) =>
   ({
     ...pick(productData, ['title', 'productId', 'category']),
     price: get(productData, ['description', 'price'], 0),
-    photo: head(get(productData, ['description', 'photo'], [])),
-  } as IMinProductData)
+    photo: head(get?.(productData, ['description', 'photo'], [])) as string,
+  })
 
 // -- api calls --
 export async function getCartData() {
@@ -83,7 +83,7 @@ export const addNewProductToUserCart = async ({
   const currentUser = useAuthStore.getState().currentUser
 
   if (currentUser && currentUser.uid) {
-    const docData = {
+    const docData: { orderList: CartProductType[]} = {
       orderList: [
         ...products,
         {
