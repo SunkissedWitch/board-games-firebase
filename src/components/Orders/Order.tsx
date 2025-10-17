@@ -37,7 +37,7 @@ export interface IOrder {
 
 export const OrderCard = ({ order }: OrderProps) => {
   const { createdAt, orderData, deliveryData, orderId, paymentData }: IOrder = order
-  console.log("order", order?.paymentData)
+  console.log("order", paymentData, orderData)
   const pricesArray: number[] = orderData?.map((order: CartProductType) =>
     getTotalItemPrice(order.productData.price, order.quantity)
   ) as number[]

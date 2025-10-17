@@ -69,6 +69,7 @@ export const OrderPage = () => {
       email: currentUser?.email || ''
     }
   : null
+  console.log('orderData', orderData)
 
   return (
     <section className='mb-5'>
@@ -78,7 +79,7 @@ export const OrderPage = () => {
           <>
             {paymentData.paymentMethod === "online_payment" && paymentData.paymenStatus === "pending" ? (
               <button className='btn btn-sm'
-                // onClick={() => doOnlinePayment(order.orderId, orderData)}
+                onClick={() => doOnlinePayment(order.orderId, orderData, summaryData.totalPrice)}
               >
                 Pay now
               </button>

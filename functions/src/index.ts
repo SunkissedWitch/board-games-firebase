@@ -10,7 +10,7 @@
 import {setGlobalOptions} from "firebase-functions";
 import {onRequest} from "firebase-functions/https";
 import * as logger from "firebase-functions/logger";
-import { createPayment } from "./wayforpay";
+import { createPayment, handlePayment } from "./wayforpay";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -33,3 +33,4 @@ export const helloWorld = onRequest((request, response) => {
 });
 
 export const wayforpayPayment = onRequest(createPayment);
+export const wayforpayConfirm = onRequest(handlePayment);

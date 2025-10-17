@@ -21,14 +21,6 @@ export interface CartProductType {
   quantity: number
 }
 
-export interface IMinProductData {
-  price: number
-  photo: string[]
-  title: string
-  productId: string
-  category: string
-}
-
 export type NewProductToUserCartProps = {
   productId: string
   productData: CartProductType['productData']

@@ -77,7 +77,7 @@ export const CartView = ({ products }: CartViewProps) => {
       if (create?.id) {
         clearCart()
         if (paymentMethod === 'online_payment') {
-          doOnlinePayment(create.id, docData.orderData)
+          doOnlinePayment(create.id, docData.orderData, totalPrice)
           return
         }
         navigate(`/cart/success/${create?.id}`)
