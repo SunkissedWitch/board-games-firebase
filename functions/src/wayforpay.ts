@@ -1,6 +1,6 @@
 import { onRequest } from "firebase-functions/v2/https"
 import * as crypto from "crypto"
-const BASE_URL = 'https://6408c5b285b0.ngrok-free.app' // replace it with ngrok address for testing
+const BASE_URL = "https://d05487c07777.ngrok-free.app" // replace it with ngrok address for testing
 
 const merchantAccount_test = "test_merch_n1" // test key from docs
 const merchantSecretKey_test = "flk3409refn54t54t*FNJRET" // test key from docs
@@ -35,9 +35,9 @@ export const createPayment = onRequest(async (req, res) => {
     orderDate,
     amount,
     currency,
-    productName: orderData.map(p => p.productName),
-    productCount: orderData.map(p => p.productCount),
-    productPrice: orderData.map(p => p.productPrice),
+    productName: orderData.map((p) => p.productName),
+    productCount: orderData.map((p) => p.productCount),
+    productPrice: orderData.map((p) => p.productPrice),
     serviceUrl: CALLBACK_URL,
   }
 
@@ -56,10 +56,7 @@ export const createPayment = onRequest(async (req, res) => {
 
   const signatureString = signatureParts.join(";")
 
-  const merchantSignature = crypto
-    .createHmac("md5", secretKey)
-    .update(signatureString)
-    .digest("hex")
+  const merchantSignature = crypto.createHmac("md5", secretKey).update(signatureString).digest("hex")
 
   res.json({
     ...data,
@@ -67,12 +64,39 @@ export const createPayment = onRequest(async (req, res) => {
   })
 })
 
-export const handlePayment = onRequest(async(req, res) => {
-  const body = req.body;
+export const handlePayment = onRequest(async (req, res) => {
+  const body = req.body
 
   // Перевірка підпису, status платежу тощо
-  console.log("WayForPay callback received:", body);
+  console.log("WayForPay callback received:", body)
+  if (body.transactionStatus === "Approved") {
+    // const resp = {
+    //   merchantAccount: "test_merch_n1",
+    //   orderReference: "WFP-953-68fa6ad40fa79",
+    //   merchantSignature: "a44460e494cf6dd970681643c6f9027c",
+    //   amount: 1,
+    //   currency: "UAH",
+    //   authCode: "",
+    //   email: "annatest@gmail.com",
+    //   phone: "38123456789",
+    //   createdDate: 1761241812,
+    //   processingDate: 1761241832,
+    //   cardPan: "42****4242",
+    //   cardType: "Visa",
+    //   issuerBankCountry: "United Kingdom",
+    //   issuerBankName: "STRIPE PAYMENTS UK LIMITED",
+    //   recToken: "",
+    //   transactionStatus: "Declined",
+    //   reason: "Declined To Card Issuer",
+    //   reasonCode: 1101,
+    //   fee: 0,
+    //   paymentSystem: "lookupCard",
+    //   acquirerBankName: "WayForPay",
+    //   cardProduct: "",
+    //   clientName: "NoCLIENT NAME",
+    // }
+  }
 
   // Повертаємо відповідь WayForPay
-  res.json({ orderReference: body.orderReference, status: "accept" });
-});
+  res.json({ orderReference: body.orderReference, status: "accept" })
+})
