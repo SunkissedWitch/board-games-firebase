@@ -1,4 +1,4 @@
-import { updateDoc, type DocumentData, type DocumentReference } from "firebase/firestore"
+import { updateDoc, type DocumentReference } from "firebase/firestore"
 import type { CartProductType } from "../../firebaseApi/CartApi"
 import { fakeFetch } from "../../utils/fakeFetch"
 
@@ -40,24 +40,24 @@ export const doOnlinePayment = async ({
 
   const data = await response.json()
   console.log("Payment data:", data)
-  const expiredJSON = {
-    orderReference: "WFP-953-68fa5f4603382",
-    transactionStatus: "Expired",
-    reason: "Cardholder session expired",
-    paymentSystem: "card",
-    acquirerBankName: "WayForPay",
-  }
+  // const expiredJSON = {
+  //   orderReference: "WFP-953-68fa5f4603382",
+  //   transactionStatus: "Expired",
+  //   reason: "Cardholder session expired",
+  //   paymentSystem: "card",
+  //   acquirerBankName: "WayForPay",
+  // }
 
-  const declinedJSON = {
-    orderReference: "WFP-953-68fa6ad40fa79",
-    cardPan: "42****4242",
-    cardType: "Visa",
-    issuerBankCountry: "United Kingdom",
-    issuerBankName: "STRIPE PAYMENTS UK LIMITED",
-    transactionStatus: "Declined",
-    reason: "Declined To Card Issuer",
-    paymentSystem: "card",
-  }
+  // const declinedJSON = {
+  //   orderReference: "WFP-953-68fa6ad40fa79",
+  //   cardPan: "42****4242",
+  //   cardType: "Visa",
+  //   issuerBankCountry: "United Kingdom",
+  //   issuerBankName: "STRIPE PAYMENTS UK LIMITED",
+  //   transactionStatus: "Declined",
+  //   reason: "Declined To Card Issuer",
+  //   paymentSystem: "card",
+  // }
   const successJSON = {
     transactionStatus: "Approved",
   }
