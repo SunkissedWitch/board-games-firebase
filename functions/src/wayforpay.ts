@@ -1,6 +1,6 @@
 import { onRequest } from "firebase-functions/v2/https"
 import * as crypto from "crypto"
-const BASE_URL = "https://d05487c07777.ngrok-free.app" // replace it with ngrok address for testing
+const BASE_URL = "https://f309af4f83be.ngrok-free.app" // replace it with ngrok address for testing
 
 const merchantAccount_test = "test_merch_n1" // test key from docs
 const merchantSecretKey_test = "flk3409refn54t54t*FNJRET" // test key from docs

@@ -1,6 +1,7 @@
 import type { DocumentData } from 'firebase/firestore'
 import { create } from 'zustand'
 import { type CartProductType, addNewProductToUserCart, changeProductQuantity, updateList } from '../firebaseApi/CartApi'
+import type { IProductData } from '../components/Orders/Order'
 
 interface CartStore {
   products: CartProductType[]
@@ -8,7 +9,7 @@ interface CartStore {
   updateProducts: (products: CartProductType[]) => void
   updateTotalItems: (totalItems: number) => void
   clearCart: () => void
-  addToCart: (productId: string, productData: DocumentData) => void
+  addToCart: (productId: string, productData: IProductData) => void
   removeFromCart: (productId: string) => void
   changeProductQuantity: (productId: string, quantity: number) => void
 }
