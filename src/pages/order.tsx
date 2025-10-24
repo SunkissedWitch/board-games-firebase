@@ -76,34 +76,38 @@ export const OrderPage = () => {
     <section className='mb-5'>
       <h1 className='text-xl font-bold mb-3 py-2.5'>Details of your order</h1>
       <div className='card card-border rounded-box bg-base-200'>
-        {paymentData && (
-          <>
-            {paymentData.paymentMethod === "online_payment" && paymentData.paymenStatus === "pending" ? (
-              <button
-                className='btn btn-sm'
-                onClick={() =>
-                  doOnlinePayment({
-                    orderRef: orderRef,
-                    orderId: order.orderId,
-                    orderData: orderData,
-                    amount: summaryData.totalPrice,
-                    callback: (result) => {
-                      console.log("payment result", result)
-                      if (result === "success") {
-                        getOrder()
-                      }
-                    },
-                  })
-                }
-              >
-                Pay now
-              </button>
-            ) : (
-              <span className='badge ms-auto'>{paymentData.paymenStatus}</span>
-            )}
-          </>
-        )}
-        <OrderHeader orderId={orderId || ""} placed={createdAt?.toDate().toLocaleDateString() || ""} />
+        <div className='grid sm:grid-cols-2'>
+          <OrderHeader orderId={orderId || ""} placed={createdAt?.toDate().toLocaleDateString() || ""} />
+          {paymentData && (
+            <div className='flex flex-col justify-center sm:items-end items-center p-2.5 max-sm:order-first'>
+              {paymentData.paymentMethod === "online_payment" && paymentData.paymenStatus === "pending" ? (
+                <button
+                  className='btn btn-sm btn-primary btn-wide'
+                  onClick={() =>
+                    doOnlinePayment({
+                      orderRef: orderRef,
+                      orderId: order.orderId,
+                      orderData: orderData,
+                      amount: summaryData.totalPrice,
+                      callback: (result) => {
+                        console.log("payment result", result)
+                        if (result === "success") {
+                          getOrder()
+                        }
+                      },
+                    })
+                  }
+                >
+                  Pay now
+                </button>
+              ) : (
+                <p className='ms-auto'>
+                  Payment status: <span className='badge'>{paymentData.paymenStatus}</span>
+                </p>
+              )}
+            </div>
+          )}
+        </div>
         <div className='p-2.5 divide-y bg-base-100'>
           {orderData?.map(({ productId, productData, quantity }) => (
             <OrderListItem key={productId} data={productData} quantity={quantity} />
